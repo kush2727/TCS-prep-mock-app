@@ -31,6 +31,57 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ===== PRINT STYLES (Round 14) ===== */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printSection,
+  #printSection * {
+    visibility: visible !important;
+  }
+
+  #printSection {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  /* Reset background colors for printer */
+  .badge {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card-total {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide UI elements */
+  nav,
+  button,
+  footer,
+  .toast,
+  #dayCompleteOverlay {
+    display: none !important;
+  }
+}
+
+#printSection {
+  display: none;
+}
+
 .hidden {
   display: none !important;
 }

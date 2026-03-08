@@ -408,89 +408,40 @@ function downloadResult() {
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    showToast(`🚀 ${isMobile ? 'Super-Capture Mobile' : 'Laptop'} Engine starting...`);
+    showToast(`🚀 ${isMobile ? 'Native Printer' : 'Laptop'} Engine starting...`);
 
     if (isMobile) {
-        // MOBILE ENGINE: Native Canvas Capture (Round 13)
-        // Bypassing html2pdf internal blob generation for maximum mobile compatibility
-        const container = document.createElement('div');
-        container.innerHTML = reportHtmlString;
-        container.style.position = 'fixed';
-        container.style.left = '0';
-        container.style.top = '0';
-        container.style.width = '595pt';
-        container.style.zIndex = '20000';
-        container.style.background = '#ffffff';
-        container.style.visibility = 'visible';
+        // MOBILE ENGINE: Native Printer (Round 14)
+        // This is 100% reliable as it uses the Phone's built-in "Save as PDF" engine.
+        const printContainer = document.getElementById('printSection');
+        if (!printContainer) {
+            console.error('Print container missing, falling back to laptop engine');
+            isMobile = false; // Fallback
+        } else {
+            printContainer.innerHTML = reportHtmlString;
+            printContainer.style.display = 'block';
 
-        // Processing overlay
-        const overlay = document.createElement('div');
-        overlay.innerHTML = `
-            <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20001;color:#4f46e5;font-family:sans-serif;text-align:center;padding:20px;">
-                <div style="width:50px;height:50px;border:5px solid #e2e8f0;border-top:5px solid #4f46e5;border-radius:50%;animation:spin 1s linear infinite;"></div>
-                <div style="margin-top:25px;font-weight:800;font-size:20px;">Preparing Mobile PDF...</div>
-                <div style="margin-top:10px;font-size:14px;color:#64748b;">Processing high-quality snapshot. Please stay on this screen.</div>
-                <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-            </div>
-        `;
+            showToast('📱 Opening Mobile Print Menu. Choose "Save as PDF" or "Share as PDF"');
 
-        document.body.appendChild(container);
-        document.body.appendChild(overlay);
-
-        setTimeout(() => {
-            // Manual html2canvas -> jsPDF path
-            const h2cOptions = {
-                scale: 2.0, // High quality for retina mobile
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                width: container.offsetWidth,
-                height: container.offsetHeight
-            };
-
-            // Access html2pdf internal html2canvas/jsPDF if available, or use global
-            const h2c = window.html2canvas || (window.html2pdf ? window.html2pdf.Worker.prototype.html2canvas : null);
-
-            if (typeof html2canvas !== 'undefined') {
-                html2canvas(container, h2cOptions).then(canvas => {
-                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                    const pdf = new jspdf.jsPDF('p', 'pt', 'a4');
-                    const imgProps = pdf.getImageProperties(imgData);
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save(`TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`);
-
-                    showToast('✅ Mobile PDF Saved!');
-                    document.body.removeChild(container);
-                    document.body.removeChild(overlay);
-                }).catch(err => {
-                    console.error('Canvas Error:', err);
-                    showToast('❌ Mobile Capture Failed.');
-                    document.body.removeChild(container);
-                    document.body.removeChild(overlay);
-                });
-            } else {
-                // Fallback to html2pdf if html2canvas not global
-                html2pdf().set(opt).from(container).save().then(() => {
-                    showToast('✅ Mobile PDF Downloaded!');
-                    document.body.removeChild(container);
-                    document.body.removeChild(overlay);
-                });
-            }
-        }, 3000);
-    } else {
-        // LAPTOP ENGINE: Use Isolated String (Reported as perfect)
-        setTimeout(() => {
-            html2pdf().set(opt).from(reportHtmlString).save().then(() => {
-                showToast('✅ Laptop PDF Downloaded!');
-            }).catch(err => {
-                console.error('PDF Error:', err);
-                showToast('❌ Generation failed.');
-            });
-        }, 2000);
+            setTimeout(() => {
+                window.print();
+                // Clean up after print menu closes
+                printContainer.style.display = 'none';
+                printContainer.innerHTML = '';
+            }, 1000);
+            return;
+        }
     }
+
+    // LAPTOP ENGINE (or Fallback): Use Isolated String (Reported as perfect)
+    setTimeout(() => {
+        html2pdf().set(opt).from(reportHtmlString).save().then(() => {
+            showToast('✅ Laptop PDF Downloaded!');
+        }).catch(err => {
+            console.error('PDF Error:', err);
+            showToast('❌ Generation failed.');
+        });
+    }, 2000);
 }
 
 
