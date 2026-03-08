@@ -180,6 +180,10 @@ function updateLiveScoreDisplay() {
 }
 
 function saveScore() {
+    if (isTestCompleted) {
+        showToast('⚠️ You have already submitted your exam! You can only review now.');
+        return;
+    }
     if (!studentName) {
         showToast('⚠️ Please enter your name first!');
         return;
@@ -593,13 +597,21 @@ function renderQuestion(index) {
     q.options.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
+        if (isTestCompleted) btn.classList.add('reviewer-mode');
         const label = labels[i];
         if (isAnswered) {
             if (selectedOptions[index] === label) btn.classList.add(label === q.answer ? 'correct' : 'wrong');
             if (label === q.answer && selectedOptions[index] !== label) btn.classList.add('correct');
         }
         btn.innerHTML = `<span class="opt-label">${label}</span> ${opt}`;
-        btn.addEventListener('click', () => selectOption(index, label, q.answer));
+
+        // Disable click if completed
+        if (!isTestCompleted) {
+            btn.addEventListener('click', () => selectOption(index, label, q.answer));
+        } else {
+            btn.style.cursor = 'default';
+            btn.title = 'Test submitted (Read-only)';
+        }
         og.appendChild(btn);
     });
 
@@ -612,16 +624,18 @@ function renderQuestion(index) {
         document.getElementById('explanationBox').classList.remove('hidden');
     }
 
-    // Disable peek buttons if not answered
+    // Disable peek buttons if not answered (unless completed, then allow review)
     const showAnsBtn = document.getElementById('showAnsBtn');
     const showExpBtn = document.getElementById('showExpBtn');
     if (showAnsBtn) {
-        showAnsBtn.disabled = !isAnswered;
-        showAnsBtn.classList.toggle('btn-disabled', !isAnswered);
+        const canReview = isAnswered || isTestCompleted;
+        showAnsBtn.disabled = !canReview;
+        showAnsBtn.classList.toggle('btn-disabled', !canReview);
     }
     if (showExpBtn) {
-        showExpBtn.disabled = !isAnswered;
-        showExpBtn.classList.toggle('btn-disabled', !isAnswered);
+        const canReview = isAnswered || isTestCompleted;
+        showExpBtn.disabled = !canReview;
+        showExpBtn.classList.toggle('btn-disabled', !canReview);
     }
 
     renderAptQuestionGrid();
@@ -718,7 +732,35 @@ function renderProblem(index) {
     clearVerdicts();
 
     const lang = document.getElementById('langSelect').value;
-    document.getElementById('codeEditor').value = p.starterCode[lang] || '';
+    document.getElementById('codeEditor').value = codes[index] || p.template || '';
+    document.getElementById('codeEditor').readOnly = isTestCompleted;
+    if (isTestCompleted) {
+        document.getElementById('codeEditor').style.opacity = '0.85';
+        document.getElementById('codeEditor').style.background = '#f8fafc';
+    } else {
+        document.getElementById('codeEditor').style.opacity = '1';
+        document.getElementById('codeEditor').style.background = '#0f172a'; // Restore dark theme
+    }
+
+    // Disable run buttons if completed
+    const runBtn = document.getElementById('btnRunCode');
+    const testBtn = document.getElementById('btnRunTest');
+    const resetBtn = document.querySelector('.btn-reset');
+
+    if (runBtn) {
+        runBtn.disabled = isTestCompleted;
+        runBtn.classList.toggle('btn-disabled', isTestCompleted);
+    }
+    if (testBtn) {
+        testBtn.disabled = isTestCompleted;
+        testBtn.classList.toggle('btn-disabled', isTestCompleted);
+    }
+    if (resetBtn) {
+        resetBtn.disabled = isTestCompleted;
+        resetBtn.classList.toggle('btn-disabled', isTestCompleted);
+    }
+
+    renderCodingProblemsSidebar();
 }
 
 function selectProblem(index) { renderProblem(index); }
