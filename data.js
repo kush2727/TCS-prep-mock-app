@@ -152,13 +152,45 @@ const aptitudeQuestions = [
   },
   {
     id: 26, category: "Data Interpretation",
-    question: "Year: 2020 Sales: 96 Lakhs, Year: 2021 Sales: 144 Lakhs. % increase in sales from 2020 to 2021?",
+    question: `
+      <div class="di-container">
+        <div class="di-ref-text">Refer to this table for Q26 & Q27:</div>
+        <table class="di-table">
+          <thead>
+            <tr><th>Year</th><th>Sales (Lakhs)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2019</td><td>120</td></tr>
+            <tr><td>2020</td><td>96</td></tr>
+            <tr><td>2021</td><td>144</td></tr>
+            <tr><td>2022</td><td>168</td></tr>
+            <tr><td>2023</td><td>132</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <strong>Q26. % increase in sales from 2020 to 2021?</strong>`,
     options: ["40%", "50%", "45%", "35%"], answer: "B",
     explanation: "% Increase = (Final - Initial) / Initial × 100 = (144 - 96) / 96 × 100 = 48 / 96 × 100 = 50%."
   },
   {
     id: 27, category: "Data Interpretation",
-    question: "Sales (Lakhs): 2019=120, 2020=96, 2021=144, 2022=168, 2023=132. Average sales over all 5 years?",
+    question: `
+      <div class="di-container">
+        <div class="di-ref-text">Refer to this table for Q26 & Q27:</div>
+        <table class="di-table">
+          <thead>
+            <tr><th>Year</th><th>Sales (Lakhs)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2019</td><td>120</td></tr>
+            <tr><td>2020</td><td>96</td></tr>
+            <tr><td>2021</td><td>144</td></tr>
+            <tr><td>2022</td><td>168</td></tr>
+            <tr><td>2023</td><td>132</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <strong>Q27. Average sales over all 5 years?</strong>`,
     options: ["120 L", "128 L", "132 L", "124 L"], answer: "C",
     explanation: "Average = (120+96+144+168+132)/5 = 660/5 = 132 L."
   },
