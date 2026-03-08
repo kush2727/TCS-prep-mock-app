@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MISSION TCS DAILY MOCK — DAY 8</title>
+  <meta name="description" content="Daily TCS NQT Practice Mock — Day 8. 25 Aptitude Questions + 2 Coding Problems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ===== NAME ENTRY MODAL ===== -->
+  <div class="name-overlay" id="nameOverlay">
+    <div class="name-modal" id="nameModal">
+      <div class="name-modal-icon">🎯</div>
+      <div class="name-modal-title">MISSION TCS DAILY MOCK</div>
+      <div class="name-modal-sub">DAY 8 — Please enter your name to begin</div>
+      <input class="name-input" id="nameInput" type="text" placeholder="Enter your full name..." maxlength="60"
+        autocomplete="off" />
+      <div class="name-error hidden" id="nameError">Please enter your name to continue.</div>
+      <button class="name-start-btn" id="nameStartBtn" onclick="startSession()">Start Mock →</button>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN PASSWORD MODAL ===== -->
+  <div class="name-overlay" id="adminOverlay" style="display:none">
+    <div class="name-modal" id="adminModal">
+      <div class="name-modal-icon">🔐</div>
+      <div class="name-modal-title">Admin Access</div>
+      <div class="name-modal-sub">Enter admin password to view student scores</div>
+      <input class="name-input" id="adminPwdInput" type="password" placeholder="Enter password..." />
+      <div class="name-error hidden" id="adminPwdError">Incorrect password. Try again.</div>
+      <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1rem">
+        <button class="name-start-btn" onclick="checkAdminPassword()" style="flex:1">Unlock →</button>
+        <button class="btn-ghost" onclick="closeAdminModal()"
+          style="padding:0.75rem 1.25rem;border-radius:10px">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" onclick="adminSecretClick()" title="">
+        <span class="logo-icon">🎯</span>
+        <div>
+          <div class="logo-title">MISSION TCS</div>
+          <div class="logo-sub">DAILY MOCK</div>
+        </div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose">✕</button>
+    </div>
+    <div class="student-name-tag" id="sidebarStudentName"></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-section="home" onclick="navigateTo('home')">
+        <span class="nav-icon">🏠</span> Home
+      </button>
+      <button class="nav-item" data-section="aptitude" onclick="navigateTo('aptitude')">
+        <span class="nav-icon">📊</span> Aptitude Practice
+      </button>
+      <button class="nav-item" data-section="coding" onclick="navigateTo('coding')">
+        <span class="nav-icon">💻</span> Coding Practice
+      </button>
+      <!-- Admin access: Ctrl+Shift+A or click logo 5× -->
+    </nav>
+    <div class="sidebar-footer">
+      <div class="day-badge">DAY 8</div>
+      <div class="sidebar-footer-text">25 Aptitude · 2 Coding</div>
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" onclick="openSidebar()">☰</button>
+      <div class="topbar-title">
+        <span class="topbar-main">MISSION TCS DAILY MOCK — DAY 8</span>
+        <span class="topbar-sub" id="topbarStudentName">25 Aptitude Questions + 2 Coding Problems</span>
+      </div>
+      <div class="topbar-action-btns">
+        <button class="btn-download-result" id="btnDownloadResult" onclick="downloadResult()" style="display:none"
+          title="Download your result report">⬇ Download Result</button>
+        <button class="btn-submit-score" onclick="saveScore()" title="Save your score to the leaderboard">💾 Submit
+          Score</button>
+      </div>
+    </header>
+
+    <!-- HOME SECTION -->
+    <section class="section active" id="section-home">
+      <div class="home-hero">
+        <div class="hero-badge">🎯 Daily Practice Mock</div>
+        <h1 class="hero-title">MISSION TCS DAILY MOCK<br /><span class="hero-day">DAY 8</span></h1>
+        <div class="hero-student-name" id="heroStudentName"></div>
+        <p class="hero-sub">25 Aptitude Questions + 2 Coding Problems · Practice Only · No Signup Required</p>
+      </div>
+      <div class="cards-grid">
+        <div class="exam-card card-a">
+          <div class="card-header">
+            <div class="card-tag">PART A</div>
+            <div class="card-title">Aptitude Practice</div>
+            <div class="card-count">25 Questions</div>
+          </div>
+          <div class="card-categories">
+            <div class="cat-item"><span class="cat-dot" style="background:#6366f1"></span>Numerical Ability</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#8b5cf6"></span>Verbal Ability</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#3b82f6"></span>Reasoning Ability</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#0ea5e9"></span>Advanced Quantitative</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#10b981"></span>Advanced Reasoning</div>
+          </div>
+          <div class="card-score-row" id="aptScoreRow">Score: <span id="aptScoreLive">0</span> / 25</div>
+          <button class="card-btn btn-primary" onclick="navigateTo('aptitude')">Start Aptitude →</button>
+        </div>
+        <div class="exam-card card-b">
+          <div class="card-header">
+            <div class="card-tag">PART B</div>
+            <div class="card-title">Coding Section</div>
+            <div class="card-count">2 Problems</div>
+          </div>
+          <div class="card-categories">
+            <div class="cat-item"><span class="cat-dot" style="background:#f59e0b"></span>Real Compiler (Judge0)</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#ef4444"></span>Run &amp; Test Cases</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#22c55e"></span>Accepted / WA Verdict</div>
+            <div class="cat-item"><span class="cat-dot" style="background:#06b6d4"></span>C, C++, Java, Python</div>
+          </div>
+          <div class="card-score-row" id="codingScoreRow">Verdicts: <span id="codingVerdictLive">Not attempted</span>
+          </div>
+          <button class="card-btn btn-secondary" onclick="navigateTo('coding')">Start Coding →</button>
+        </div>
+      </div>
+      <div class="section-title-row">
+        <h2 class="section-title">Quick Jump — Aptitude Questions</h2>
+        <button class="btn-ghost" onclick="navigateTo('aptitude')">View All →</button>
+      </div>
+      <div class="q-grid" id="homeQGrid"></div>
+      <div class="section-title-row" style="margin-top:2rem">
+        <h2 class="section-title">Coding Problems</h2>
+      </div>
+      <div class="coding-preview-grid" id="codingPreviewGrid"></div>
+    </section>
+
+    <!-- APTITUDE SECTION -->
+    <section class="section" id="section-aptitude">
+      <div class="apt-layout">
+        <div class="apt-main">
+          <div class="apt-header">
+            <button class="btn-ghost" onclick="navigateTo('home')">← Back</button>
+            <div class="apt-progress">Question <span id="currentQNum">1</span> / 25</div>
+            <div class="apt-live-score">✅ <span id="aptLiveScore">0</span> / 25 correct</div>
+          </div>
+          <div class="question-card" id="questionCard">
+            <div class="q-meta">
+              <span class="q-num-badge" id="qNumBadge">Q1</span>
+              <span class="q-cat-badge" id="qCatBadge">Numerical Ability</span>
+            </div>
+            <div class="q-text" id="qText">Loading question...</div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <div class="answer-box hidden" id="answerBox">
+              <div class="answer-label">✅ Correct Answer</div>
+              <div class="answer-val" id="answerVal"></div>
+            </div>
+            <div class="explanation-box hidden" id="explanationBox">
+              <div class="exp-label">💡 Explanation</div>
+              <div class="exp-text" id="expText"></div>
+            </div>
+          </div>
+          <div class="apt-actions">
+            <button class="btn-nav" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+            <button class="btn-show-ans" id="showAnsBtn" onclick="toggleAnswer()">Show Answer</button>
+            <button class="btn-show-exp" id="showExpBtn" onclick="toggleExplanation()">Show Explanation</button>
+            <button class="btn-nav btn-next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+          </div>
+        </div>
+        <div class="apt-sidebar">
+          <div class="apt-sidebar-title">Question Navigator</div>
+          <div class="q-grid-side" id="aptQGrid"></div>
+          <div class="legend">
+            <div class="legend-item"><span class="legend-dot dot-active"></span> Current</div>
+            <div class="legend-item"><span class="legend-dot dot-answered"></span> Answered</div>
+            <div class="legend-item"><span class="legend-dot dot-unvisited"></span> Unvisited</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODING SECTION -->
+    <section class="section" id="section-coding">
+      <div class="coding-layout">
+        <div class="coding-sidebar">
+          <div class="coding-sidebar-title">Problems</div>
+          <button class="problem-item active" id="problemBtn0" onclick="selectProblem(0)">
+            <span class="prob-num">P1</span>
+            <span class="prob-name" id="probName0">Loading...</span>
+          </button>
+          <button class="problem-item" id="problemBtn1" onclick="selectProblem(1)">
+            <span class="prob-num">P2</span>
+            <span class="prob-name" id="probName1">Loading...</span>
+          </button>
+          <button class="btn-ghost back-home-btn" onclick="navigateTo('home')" style="margin-top:auto">← Home</button>
+        </div>
+        <div class="coding-main">
+          <div class="problem-panel">
+            <div class="problem-header">
+              <span class="prob-badge" id="probBadge">P1</span>
+              <span class="prob-title" id="probTitle">Problem Title</span>
+            </div>
+            <div class="problem-body" id="problemBody">
+              <p id="probDesc"></p>
+              <h4>Input Format</h4>
+              <p id="probInput"></p>
+              <h4>Output Format</h4>
+              <p id="probOutput"></p>
+              <h4>Constraints</h4>
+              <ul id="probConstraints"></ul>
+              <h4>Example</h4>
+              <div class="example-block">
+                <div>
+                  <div class="ex-label">Input</div>
+                  <pre id="probExInput"></pre>
+                </div>
+                <div>
+                  <div class="ex-label">Output</div>
+                  <pre id="probExOutput"></pre>
+                </div>
+              </div>
+              <div class="explanation-box" style="margin-top:1rem">
+                <div class="exp-label">💡 Explanation</div>
+                <div id="probExplanation" class="exp-text"></div>
+              </div>
+            </div>
+          </div>
+          <div class="editor-panel">
+            <div class="editor-header">
+              <select class="lang-select" id="langSelect" onchange="changeLang()">
+                <option value="python">Python 3</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+              </select>
+              <div class="editor-header-btns">
+                <button class="btn-reset" onclick="resetCode()">↺ Reset</button>
+                <button class="btn-view-solution" onclick="openSolution()">💡 View Solution</button>
+              </div>
+            </div>
+            <textarea class="code-editor" id="codeEditor" spellcheck="false"
+              placeholder="Write your code here..."></textarea>
+            <div class="io-tabs">
+              <button class="io-tab active" id="tabCustomInput" onclick="switchIOTab('input')">📥 Custom Input</button>
+              <button class="io-tab" id="tabOutput" onclick="switchIOTab('output')">📤 Output</button>
+              <button class="io-tab" id="tabTestcase" onclick="switchIOTab('testcase')">⚡ Test Case</button>
+            </div>
+            <div class="io-pane active" id="paneInput">
+              <textarea class="custom-input-area" id="customInput"
+                placeholder="Enter custom input here (stdin)..."></textarea>
+            </div>
+            <div class="io-pane" id="paneOutput">
+              <div class="output-status-bar" id="outputStatusBar"></div>
+              <pre class="output-area" id="outputArea">Run your code to see output here.</pre>
+            </div>
+            <div class="io-pane" id="paneTestcase">
+              <div class="tc-verdict-bar" id="tcVerdictBar"></div>
+              <div class="testcase-row">
+                <div class="testcase-col">
+                  <div class="tc-label">Input</div>
+                  <pre class="tc-value" id="tcInput"></pre>
+                </div>
+                <div class="testcase-col">
+                  <div class="tc-label">Expected Output</div>
+                  <pre class="tc-value" id="tcExpected"></pre>
+                </div>
+                <div class="testcase-col">
+                  <div class="tc-label">Your Output</div>
+                  <pre class="tc-value" id="tcUserOutput">—</pre>
+                </div>
+              </div>
+            </div>
+            <div class="editor-actions">
+              <button class="btn-run" id="btnRunCode" onclick="runCode()">▶ Run Code</button>
+              <button class="btn-testcase" id="btnRunTest" onclick="runTestCase()">⚡ Run Test Case</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN SECTION -->
+    <section class="section" id="section-admin">
+      <div class="admin-panel">
+        <div class="admin-header">
+          <div>
+            <h2 class="admin-title">🔐 Admin Panel — Score Dashboard</h2>
+            <div class="admin-sub">MISSION TCS DAILY MOCK · DAY 8</div>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+            <button class="btn-clear-scores" onclick="clearAllScores()">🗑 Clear All</button>
+            <button class="btn-ghost" onclick="navigateTo('home')" style="padding:0.55rem 1rem;border-radius:8px">←
+              Back</button>
+          </div>
+        </div>
+        <div class="admin-stats-row" id="adminStatsRow"></div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="adminTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Student Name</th>
+                <th>Submitted At</th>
+                <th>Aptitude Score</th>
+                <th>P1 – Two Sum</th>
+                <th>P2 – Reverse Words</th>
+                <th>Total Score (/27)</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+          <div class="admin-empty" id="adminEmpty" style="display:none">
+            No scores submitted yet. Students need to click "💾 Submit Score" after finishing.
+          </div>
+        </div>
+      </div>
+      <!-- TEST COMPLETED SECTION -->
+      <section class="section" id="section-completed">
+        <div class="completed-hero">
+          <div class="completed-icon">✅</div>
+          <h1 class="completed-title">Test Successfully Completed!</h1>
+          <p class="completed-sub">You have already submitted your response for Day 8.</p>
+          <div class="completed-summary-box">
+            <p>Your performance has been recorded by the admin.</p>
+            <p>Download your result for detailed analysis.</p>
+          </div>
+          <div class="completed-actions">
+            <button class="btn-download-hero" onclick="downloadResult()">⬇ Download My Result (PDF)</button>
+            <p class="come-back-msg">Come back <strong>tomorrow</strong> for the next daily mock 🚀</p>
+          </div>
+        </div>
+      </section>
+  </main>
+
+  <!-- DAY COMPLETE MODAL -->
+  <div class="day-complete-overlay" id="dayCompleteOverlay" onclick="closeDayComplete()"></div>
+  <div class="day-complete-modal" id="dayCompleteModal">
+    <div class="day-complete-confetti">🎉</div>
+    <div class="day-complete-badge">DAY 8 — COMPLETE</div>
+    <h2 class="day-complete-title">Mission Accomplished! 🏆</h2>
+    <div class="day-complete-name" id="dayCompleteName"></div>
+    <div class="day-complete-score-row" id="dayCompleteScore"></div>
+    <div class="day-complete-streak">
+      <div class="streak-line">🔥 Keep your streak alive</div>
+      <div class="streak-msg">Come back <strong>tomorrow</strong> for <span class="tomorrow-badge">DAY 9</span></div>
+      <div class="streak-sub">Consistency is the key to cracking TCS NQT 🚀</div>
+    </div>
+    <div class="day-complete-actions">
+      <button class="day-complete-close-btn" onclick="closeDayComplete()">Got it! See you tomorrow →</button>
+    </div>
+  </div>
+
+  <!-- SOLUTION MODAL -->
+
+  <div class="sol-overlay" id="solOverlay" onclick="closeSolution()"></div>
+  <div class="sol-modal" id="solModal">
+    <div class="sol-header">
+      <div class="sol-header-left">
+        <span class="prob-badge" id="solBadge">P1</span>
+        <span class="sol-title" id="solTitle">Solution</span>
+      </div>
+      <button class="sol-close" onclick="closeSolution()">✕ Close</button>
+    </div>
+    <div class="sol-body">
+      <div class="sol-section">
+        <div class="sol-section-label">🧠 Approach &amp; Algorithm</div>
+        <div class="sol-approach" id="solApproach"></div>
+      </div>
+      <div class="sol-complexity-row" id="solComplexityRow"></div>
+      <div class="sol-section">
+        <div class="sol-section-label">📄 Solution Code</div>
+        <div class="sol-lang-tabs">
+          <button class="sol-tab active" data-lang="python" onclick="switchSolTab('python')">Python</button>
+          <button class="sol-tab" data-lang="java" onclick="switchSolTab('java')">Java</button>
+          <button class="sol-tab" data-lang="cpp" onclick="switchSolTab('cpp')">C++</button>
+          <button class="sol-tab" data-lang="c" onclick="switchSolTab('c')">C</button>
+        </div>
+        <div class="sol-code-wrap">
+          <button class="sol-copy-btn" id="solCopyBtn" onclick="copySolution()">📋 Copy Code</button>
+          <pre class="sol-code" id="solCode"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
