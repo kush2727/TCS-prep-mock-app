@@ -543,6 +543,20 @@ function renderQuestion(index) {
         document.getElementById('explanationBox').classList.remove('hidden');
     }
 
+    // Disable peek buttons if not answered
+    const showAnsBtn = document.getElementById('showAnsBtn');
+    const showExpBtn = document.getElementById('showExpBtn');
+    if (showAnsBtn) {
+        showAnsBtn.disabled = !isAnswered;
+        showAnsBtn.style.opacity = isAnswered ? '1' : '0.5';
+        showAnsBtn.style.cursor = isAnswered ? 'pointer' : 'not-allowed';
+    }
+    if (showExpBtn) {
+        showExpBtn.disabled = !isAnswered;
+        showExpBtn.style.opacity = isAnswered ? '1' : '0.5';
+        showExpBtn.style.cursor = isAnswered ? 'pointer' : 'not-allowed';
+    }
+
     renderAptQuestionGrid();
     renderHomeGrids();
     updateLiveScoreDisplay();
