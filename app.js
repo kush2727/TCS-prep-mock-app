@@ -9,7 +9,7 @@ const JUDGE0_HEADERS = { 'Content-Type': 'application/json' };
 const LANG_IDS = { python: 71, java: 62, cpp: 54, c: 50 };
 const ADMIN_PWD = 'Kush@178';
 const STORAGE_KEY = 'tcs_mock_day9';      // score records (all students)
-const SESSION_KEY = 'tcs_mock_session';   // this student's live session
+const SESSION_KEY = 'tcs_mock_session_day9';   // this student's live session
 
 // ===== SESSION STATE =====
 let studentName = '';
