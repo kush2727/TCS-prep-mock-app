@@ -337,80 +337,83 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    // Build completion HTML (simplified for html2pdf rendering)
+    // Build completion HTML (Simplified "Ironclad" version for 100% reliability)
     const reportContainer = document.createElement('div');
+    // Using a safe system font stack and solid colors for maximum rendering stability
     reportContainer.innerHTML = `
-    <div style="font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:1.5rem;width:720px;margin:0 auto;">
-      <!-- Header -->
-      <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:2rem;color:#fff;margin-bottom:2rem;text-align:center;">
-        <div style="font-size:0.85rem;font-weight:600;opacity:0.85;margin-bottom:0.4rem;">MISSION TCS DAILY MOCK</div>
-        <div style="font-size:1.8rem;font-weight:800;margin-bottom:0.5rem;">DAY 9 — Result Report</div>
-        <div style="font-size:1.1rem;font-weight:600;">👤 ${studentName}</div>
-        <div style="font-size:0.8rem;opacity:0.75;margin-top:0.4rem;">${now}</div>
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:20px;width:720px;margin:0 auto;">
+      <!-- Header (Solid Blue for better rendering than gradients) -->
+      <div style="background:#4f46e5;border-radius:12px;padding:30px;color:#ffffff;margin-bottom:30px;text-align:center;">
+        <div style="font-size:14px;font-weight:600;opacity:0.9;margin-bottom:5px;letter-spacing:1px;">MISSION TCS DAILY MOCK</div>
+        <div style="font-size:24px;font-weight:800;margin-bottom:10px;">DAY 9 — Result Report</div>
+        <div style="font-size:18px;font-weight:600;">👤 ${studentName}</div>
+        <div style="font-size:12px;opacity:0.8;margin-top:8px;">${now}</div>
       </div>
 
       <!-- Score Summary -->
-      <div style="display:flex;gap:1%;margin-bottom:2rem;justify-content:space-between;">
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;width:32%;">
-          <div style="font-size:1.8rem;font-weight:800;color:#6366f1;">${apt}<span style="font-size:0.9rem;color:#94a3b8;">/25</span></div>
-          <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">Aptitude Score</div>
+      <div style="display:flex;margin-bottom:30px;justify-content:space-between;">
+        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:15px;text-align:center;width:30%;">
+          <div style="font-size:24px;font-weight:800;color:#4f46e5;">${apt}<span style="font-size:14px;color:#94a3b8;">/25</span></div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px;">Aptitude Score</div>
         </div>
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;width:32%;">
-          <div style="font-size:1.8rem;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:0.9rem;color:#94a3b8;">/2</span></div>
-          <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">Coding Solved</div>
+        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:15px;text-align:center;width:30%;">
+          <div style="font-size:24px;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:14px;color:#94a3b8;">/2</span></div>
+          <div style="font-size:11px;color:#64748b;margin-top:4px;">Coding Solved</div>
         </div>
-        <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;padding:1rem;text-align:center;width:32%;">
-          <div style="font-size:1.8rem;font-weight:800;color:#fff;">${total}<span style="font-size:0.9rem;opacity:0.7;">/27</span></div>
-          <div style="font-size:0.75rem;color:#e0e7ff;margin-top:0.2rem;">Total Score</div>
+        <div style="background:#4f46e5;border-radius:10px;padding:15px;text-align:center;width:30%;">
+          <div style="font-size:24px;font-weight:800;color:#ffffff;">${total}<span style="font-size:14px;opacity:0.8;">/27</span></div>
+          <div style="font-size:11px;color:#ffffff;opacity:0.9;margin-top:4px;">Total Score</div>
         </div>
       </div>
 
-      <!-- Aptitude Questions -->
-      <div style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:#0f172a;border-left:4px solid #6366f1;padding-left:0.75rem;">
+      <!-- Sections -->
+      <div style="font-size:16px;font-weight:800;margin-bottom:15px;color:#0f172a;border-left:4px solid #4f46e5;padding-left:12px;">
         Part A — Aptitude Questions (${apt}/25 correct)
       </div>
       ${qRows}
 
-      <!-- Coding Section -->
-      <div style="font-size:1.1rem;font-weight:800;margin:2rem 0 1rem;color:#0f172a;border-left:4px solid #f59e0b;padding-left:0.75rem;">
+      <div style="font-size:16px;font-weight:800;margin:30px 0 15px;color:#0f172a;border-left:4px solid #f59e0b;padding-left:12px;">
         Part B — Coding Problems (${cod}/2 Accepted)
       </div>
       ${codingHtml}
 
-      <div style="text-align:center;margin-top:2rem;font-size:0.78rem;color:#94a3b8;">
+      <div style="text-align:center;margin-top:30px;font-size:12px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:20px;">
         Generated by MISSION TCS DAILY MOCK · Day 9 · ${now}
       </div>
     </div>`;
 
-    // html2pdf options
+    // html2pdf options (The "Ironclad" Config)
     const opt = {
         margin: [10, 10, 10, 10],
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 1.2,
+            scale: 1.0,  // Standard definition for stability
             useCORS: true,
             letterRendering: true,
             logging: false,
             backgroundColor: '#ffffff',
-            windowWidth: 720 // Safe width for A4
+            windowWidth: 720
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     // Execute download
-    showToast('🚀 Fitting Report to A4. Please wait...');
+    showToast('🚀 Stabilizing PDF Engine. Please wait...');
 
-    // We still append it to the DOM momentarily to ensure all styles are computed
+    // Use the innerHTML string directly for cleaner isolated rendering
+    const reportHtml = reportContainer.innerHTML;
+
+    // We still append it momentarily to ensure styles are computed correctly in some browsers
     reportContainer.style.position = 'absolute';
     reportContainer.style.left = '-9999px';
     reportContainer.style.top = '0';
-    reportContainer.style.width = '720px'; // Lock width
+    reportContainer.style.width = '720px';
     document.body.appendChild(reportContainer);
 
     setTimeout(() => {
-        html2pdf().set(opt).from(reportContainer).save().then(() => {
+        html2pdf().set(opt).from(reportHtml).save().then(() => {
             showToast('✅ PDF Downloaded successfully!');
             document.body.removeChild(reportContainer);
         }).catch(err => {
@@ -418,7 +421,7 @@ function downloadResult() {
             showToast('❌ PDF Generation failed. Try again.');
             if (document.body.contains(reportContainer)) document.body.removeChild(reportContainer);
         });
-    }, 1000);
+    }, 1500); // 1.5s for full paint
 }
 
 
