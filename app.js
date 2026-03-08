@@ -337,107 +337,78 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>TCS Mock Day 8 — Result: ${studentName}</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;background:#f8f9ff;color:#0f172a;padding:2rem 1rem;}
-  .print-bar{
-    position:sticky;top:0;z-index:100;background:#1e1e2e;color:#fff;
-    padding:0.85rem 2rem;display:flex;align-items:center;justify-content:space-between;
-    margin:-2rem -1rem 2rem;
-  }
-  .print-bar-title{font-size:0.85rem;font-weight:600;opacity:0.8;}
-  .btn-print{
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;
-    border:none;border-radius:8px;padding:0.55rem 1.4rem;
-    font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
-  }
-  .btn-print:hover{opacity:0.88;}
-  @media print{
-    .print-bar{display:none !important;}
-    body{background:#fff !important;padding:0 !important;}
-    @page{margin:1.2cm;size:A4;}
-    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
-    div[style*="page-break-inside:avoid"]{page-break-inside:avoid;}
-  }
-</style>
-</head>
-<body>
-<div class="print-bar">
-  <span class="print-bar-title">📄 TCS Mock Day 8 — Result Report · ${studentName}</span>
-  <button class="btn-print" onclick="window.print()">🖨️ Save as PDF / Print</button>
-</div>
-<div style="max-width:800px;margin:0 auto;">
+    // Build completion HTML (simplified for html2pdf rendering)
+    const reportContainer = document.createElement('div');
+    reportContainer.innerHTML = `
+    <div style="font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:1.5rem;max-width:800px;margin:0 auto;">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:2rem;color:#fff;margin-bottom:2rem;text-align:center;">
+        <div style="font-size:0.85rem;font-weight:600;opacity:0.85;margin-bottom:0.4rem;">MISSION TCS DAILY MOCK</div>
+        <div style="font-size:1.8rem;font-weight:800;margin-bottom:0.5rem;">DAY 8 — Result Report</div>
+        <div style="font-size:1.1rem;font-weight:600;">👤 ${studentName}</div>
+        <div style="font-size:0.8rem;opacity:0.75;margin-top:0.4rem;">${now}</div>
+      </div>
 
-  <!-- Header -->
-  <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:2rem;color:#fff;margin-bottom:2rem;text-align:center;">
-    <div style="font-size:0.85rem;font-weight:600;opacity:0.85;margin-bottom:0.4rem;">MISSION TCS DAILY MOCK</div>
-    <div style="font-size:1.8rem;font-weight:800;margin-bottom:0.5rem;">DAY 8 — Result Report</div>
-    <div style="font-size:1.1rem;font-weight:600;">👤 ${studentName}</div>
-    <div style="font-size:0.8rem;opacity:0.75;margin-top:0.4rem;">${now}</div>
-  </div>
+      <!-- Score Summary -->
+      <div style="display:flex;gap:1%;margin-bottom:2rem;justify-content:space-between;">
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;width:32%;">
+          <div style="font-size:1.8rem;font-weight:800;color:#6366f1;">${apt}<span style="font-size:0.9rem;color:#94a3b8;">/25</span></div>
+          <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">Aptitude Score</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;text-align:center;width:32%;">
+          <div style="font-size:1.8rem;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:0.9rem;color:#94a3b8;">/2</span></div>
+          <div style="font-size:0.75rem;color:#64748b;margin-top:0.2rem;">Coding Solved</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;padding:1rem;text-align:center;width:32%;">
+          <div style="font-size:1.8rem;font-weight:800;color:#fff;">${total}<span style="font-size:0.9rem;opacity:0.7;">/27</span></div>
+          <div style="font-size:0.75rem;color:#e0e7ff;margin-top:0.2rem;">Total Score</div>
+        </div>
+      </div>
 
-  <!-- Score Summary -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;">
-    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:#6366f1;">${apt}<span style="font-size:1rem;color:#94a3b8;">/25</span></div>
-      <div style="font-size:0.78rem;color:#64748b;margin-top:0.3rem;">Aptitude Score</div>
-    </div>
-    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:1rem;color:#94a3b8;">/2</span></div>
-      <div style="font-size:0.78rem;color:#64748b;margin-top:0.3rem;">Coding Solved</div>
-    </div>
-    <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;padding:1.25rem;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:#fff;">${total}<span style="font-size:1rem;opacity:0.7;">/27</span></div>
-      <div style="font-size:0.78rem;color:#e0e7ff;margin-top:0.3rem;">Total Score</div>
-    </div>
-  </div>
+      <!-- Aptitude Questions -->
+      <div style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:#0f172a;border-left:4px solid #6366f1;padding-left:0.75rem;">
+        Part A — Aptitude Questions (${apt}/25 correct)
+      </div>
+      ${qRows}
 
-  <!-- Aptitude Questions -->
-  <div style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:#0f172a;border-left:4px solid #6366f1;padding-left:0.75rem;">
-    Part A — Aptitude Questions (${apt}/25 correct)
-  </div>
-  ${qRows}
+      <!-- Coding Section -->
+      <div style="font-size:1.1rem;font-weight:800;margin:2rem 0 1rem;color:#0f172a;border-left:4px solid #f59e0b;padding-left:0.75rem;">
+        Part B — Coding Problems (${cod}/2 Accepted)
+      </div>
+      ${codingHtml}
 
-  <!-- Coding Section -->
-  <div style="font-size:1.1rem;font-weight:800;margin:2rem 0 1rem;color:#0f172a;border-left:4px solid #f59e0b;padding-left:0.75rem;">
-    Part B — Coding Problems (${cod}/2 Accepted)
-  </div>
-  ${codingHtml}
+      <div style="text-align:center;margin-top:2rem;font-size:0.78rem;color:#94a3b8;">
+        Generated by MISSION TCS DAILY MOCK · Day 8 · ${now}
+      </div>
+    </div>`;
 
-  <div style="text-align:center;margin-top:2rem;font-size:0.78rem;color:#94a3b8;">
-    Generated by MISSION TCS DAILY MOCK · Day 8 · ${now}
-  </div>
-</div>
-</body>
-</html>`;
-
-    // ---- Open in new window and trigger browser print-to-PDF ----
-    const win = window.open('', '_blank', 'width=900,height=700');
-    if (!win) {
-        showToast('⚠️ Pop-up blocked! Allow pop-ups for this page and try again.');
-        return;
-    }
-    win.document.write(html);
-    win.document.close();
-
-    // Wait for fonts/styles to load then print
-    win.onload = () => {
-        setTimeout(() => {
-            win.focus();
-            win.print();
-        }, 600);
+    // html2pdf options
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `TCS_Mock_Day8_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
-    // Fallback if onload already fired
-    setTimeout(() => {
-        if (win && !win.closed) { win.focus(); win.print(); }
-    }, 1200);
+
+    // Execute download
+    showToast('🚀 Generating your PDF. Please wait...');
+
+    // Temporarily add to DOM for better rendering
+    reportContainer.style.position = 'absolute';
+    reportContainer.style.left = '-9999px';
+    reportContainer.style.top = '0';
+    document.body.appendChild(reportContainer);
+
+    html2pdf().set(opt).from(reportContainer).save().then(() => {
+        showToast('✅ PDF Downloaded successfully!');
+        document.body.removeChild(reportContainer);
+    }).catch(err => {
+        console.error('PDF Error:', err);
+        showToast('❌ PDF Generation failed. Try again.');
+        document.body.removeChild(reportContainer);
+    });
 }
 
 
