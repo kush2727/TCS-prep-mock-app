@@ -680,7 +680,7 @@ function prevQuestion() {
     if (currentQuestion > 0) { currentQuestion--; renderQuestion(currentQuestion); }
 }
 function toggleAnswer() {
-    if (selectedOptions[currentQuestion] === undefined) {
+    if (!isTestCompleted && selectedOptions[currentQuestion] === undefined) {
         showToast('⚠️ Please select an option first!');
         return;
     }
@@ -691,7 +691,7 @@ function toggleAnswer() {
     box.classList.toggle('hidden');
 }
 function toggleExplanation() {
-    if (selectedOptions[currentQuestion] === undefined) {
+    if (!isTestCompleted && selectedOptions[currentQuestion] === undefined) {
         showToast('⚠️ Please select an option first!');
         return;
     }
