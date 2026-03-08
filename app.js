@@ -387,7 +387,14 @@ function downloadResult() {
         margin: [10, 10, 10, 10],
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        html2canvas: {
+            scale: 1.5,
+            useCORS: true,
+            letterRendering: true,
+            logging: false,
+            scrollX: 0,
+            scrollY: 0
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -396,19 +403,28 @@ function downloadResult() {
     showToast('🚀 Generating your PDF. Please wait...');
 
     // Temporarily add to DOM for better rendering
-    reportContainer.style.position = 'absolute';
-    reportContainer.style.left = '-9999px';
+    reportContainer.style.position = 'fixed';
+    reportContainer.style.left = '0';
     reportContainer.style.top = '0';
+    reportContainer.style.width = '800px';
+    reportContainer.style.zIndex = '-9999';
+    reportContainer.style.opacity = '0';
+    reportContainer.style.pointerEvents = 'none';
     document.body.appendChild(reportContainer);
 
-    html2pdf().set(opt).from(reportContainer).save().then(() => {
-        showToast('✅ PDF Downloaded successfully!');
-        document.body.removeChild(reportContainer);
-    }).catch(err => {
-        console.error('PDF Error:', err);
-        showToast('❌ PDF Generation failed. Try again.');
-        document.body.removeChild(reportContainer);
-    });
+    // Give browser a moment to paint the new element
+    setTimeout(() => {
+        html2pdf().set(opt).from(reportContainer).save().then(() => {
+            showToast('✅ PDF Downloaded successfully!');
+            document.body.removeChild(reportContainer);
+        }).catch(err => {
+            console.error('PDF Error:', err);
+            showToast('❌ PDF Generation failed. Try again.');
+            if (document.body.contains(reportContainer)) {
+                document.body.removeChild(reportContainer);
+            }
+        });
+    }, 500);
 }
 
 
