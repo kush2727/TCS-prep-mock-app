@@ -337,92 +337,87 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    // Build completion HTML (Round 9: Mobile-Style Stacked Version)
-    const reportContainer = document.createElement('div');
-    // Using a vertical "Mobile-First" card layout within the 595pt A4 width
-    reportContainer.innerHTML = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:25px;width:595px;box-sizing:border-box;margin:0 auto;">
-      <!-- Mobile-Style Header -->
-      <div style="background:#4f46e5;border-radius:12px;padding:20px;color:#ffffff;margin-bottom:20px;text-align:center;">
-        <div style="font-size:10px;font-weight:700;opacity:0.85;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">TCS DAILY MOCK</div>
-        <div style="font-size:20px;font-weight:800;margin-bottom:6px;">Day 9 — Result</div>
-        <div style="display:inline-block;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:14px;font-weight:600;">👤 ${studentName}</div>
-        <div style="font-size:10px;opacity:0.7;margin-top:8px;">${now}</div>
-      </div>
-
-      <!-- Mobile-Style Stacked Scores -->
-      <div style="margin-bottom:20px;">
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:15px;text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-           <div style="font-size:11px;color:#64748b;font-weight:700;">APTITUDE SCORE</div>
-           <div style="font-size:22px;font-weight:800;color:#4f46e5;">${apt}<span style="font-size:14px;color:#94a3b8;font-weight:400;">/25</span></div>
+    // Build completion HTML String (Round 10: Isolated String Version)
+    // This method is the most reliable as it builds the PDF in a clean memory space
+    const reportHtmlString = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+        body { margin: 0; padding: 0; background: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .page { width: 595pt; min-height: 842pt; padding: 30pt; margin: 0 auto; background: #fff; color: #0f172a; }
+        .header { background: #4f46e5; border-radius: 12pt; padding: 25pt; color: #ffffff; margin-bottom: 20pt; text-align: center; }
+        .badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 5pt 15pt; border-radius: 20pt; font-size: 14pt; font-weight: 600; margin: 10pt 0; }
+        .card { background: #fff; border: 1pt solid #e2e8f0; border-radius: 12pt; padding: 15pt; margin-bottom: 10pt; display: flex; align-items: center; justify-content: space-between; }
+        .card-total { background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 20pt; }
+        .section-title { font-size: 14pt; font-weight: 800; margin: 25pt 0 12pt; color: #4f46e5; text-transform: uppercase; border-bottom: 2pt solid #e2e8f0; padding-bottom: 5pt; }
+        .q-card { background: #fff; border: 1pt solid #e2e8f0; border-radius: 12pt; padding: 15pt; margin-bottom: 10pt; page-break-inside: avoid; }
+      </style>
+    </head>
+    <body>
+      <div class="page">
+        <div class="header">
+          <div style="font-size: 10pt; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1pt;">TCS DAILY MOCK</div>
+          <div style="font-size: 22pt; font-weight: 800; margin: 5pt 0;">Day 9 — Result</div>
+          <div class="badge">👤 ${studentName}</div>
+          <div style="font-size: 10pt; opacity: 0.8; margin-top: 5pt;">${now}</div>
         </div>
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:15px;text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-           <div style="font-size:11px;color:#64748b;font-weight:700;">CODING SOLVED</div>
-           <div style="font-size:22px;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:14px;color:#94a3b8;font-weight:400;">/2</span></div>
+
+        <div class="card">
+          <span style="font-size: 11pt; color: #64748b; font-weight: 700;">APTITUDE SCORE</span>
+          <span style="font-size: 22pt; font-weight: 800; color: #4f46e5;">${apt}<span style="font-size: 14pt; color: #94a3b8; font-weight: 400;">/25</span></span>
         </div>
-        <div style="background:linear-gradient(135deg,#4f46e5,#6366f1);border-radius:12px;padding:18px;text-align:center;display:flex;align-items:center;justify-content:space-between;color:#ffffff;">
-           <div style="font-size:11px;opacity:0.9;font-weight:700;">TOTAL PERFORMANCE</div>
-           <div style="font-size:24px;font-weight:800;">${total}<span style="font-size:14px;opacity:0.7;font-weight:400;">/27</span></div>
+        <div class="card">
+          <span style="font-size: 11pt; color: #64748b; font-weight: 700;">CODING SOLVED</span>
+          <span style="font-size: 22pt; font-weight: 800; color: #f59e0b;">${cod}<span style="font-size: 14pt; color: #94a3b8; font-weight: 400;">/2</span></span>
+        </div>
+        <div class="card card-total">
+          <span style="font-size: 11pt; font-weight: 700;">TOTAL PERFORMANCE</span>
+          <span style="font-size: 24pt; font-weight: 800;">${total}<span style="font-size: 14pt; opacity: 0.8; font-weight: 400;">/27</span></span>
+        </div>
+
+        <div class="section-title">Aptitude Review (${apt}/25)</div>
+        ${qRows}
+
+        <div class="section-title" style="color: #f59e0b; border-color: #fef3c7;">Coding Submission (${cod}/2)</div>
+        ${codingHtml}
+
+        <div style="text-align: center; margin-top: 30pt; font-size: 10pt; color: #94a3b8; border-top: 1pt solid #e2e8f0; padding-top: 20pt;">
+          Mock App Experience · Day 9 · Generated on ${now}
         </div>
       </div>
+    </body>
+    </html>`;
 
-      <!-- Section Dividers -->
-      <div style="font-size:14px;font-weight:800;margin-bottom:12px;color:#4f46e5;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:5px;">
-        Aptitude Review (${apt}/25)
-      </div>
-      ${qRows}
-
-      <div style="font-size:14px;font-weight:800;margin:25px 0 12px;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:5px;">
-        Coding Submission (${cod}/2)
-      </div>
-      ${codingHtml}
-
-      <div style="text-align:center;margin-top:25px;font-size:10px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:15px;">
-        Mock App Experience · Day 9 · ${now}
-      </div>
-    </div>`;
-
-    // html2pdf options (Round 9: Mobile-Style Precision)
+    // html2pdf options (Round 10: Isolated String rendering)
     const opt = {
         margin: 0,
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 1.0,
+            scale: 1.5, // Crisp quality
             useCORS: true,
             letterRendering: true,
             logging: false,
-            backgroundColor: '#ffffff',
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: 595,
-            width: 595
+            backgroundColor: '#ffffff'
         },
         jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     // Execute download
-    showToast('🚀 Building Mobile Experience PDF...');
+    showToast('🚀 Isolated Rendering in progress. Please wait...');
 
-    reportContainer.style.position = 'fixed';
-    reportContainer.style.left = '0';
-    reportContainer.style.top = '0';
-    reportContainer.style.width = '595px';
-    reportContainer.style.zIndex = '-9999';
-    reportContainer.style.visibility = 'visible';
-    document.body.appendChild(reportContainer);
-
+    // Directly render from the HTML string for 100% isolation
     setTimeout(() => {
-        html2pdf().set(opt).from(reportContainer).save().then(() => {
-            showToast('✅ Mobile-Style PDF Downloaded!');
-            document.body.removeChild(reportContainer);
+        html2pdf().set(opt).from(reportHtmlString).save().then(() => {
+            showToast('✅ PDF Downloaded Successfully!');
         }).catch(err => {
             console.error('PDF Error:', err);
             showToast('❌ Generation failed. Try again.');
-            if (document.body.contains(reportContainer)) document.body.removeChild(reportContainer);
         });
-    }, 1500);
+    }, 2000); // 2-second buffer for paint/engine readiness
 }
 
 
