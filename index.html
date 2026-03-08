@@ -10,7 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10.8" />
+  <link rel="stylesheet" href="style.css?v=10.9" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
@@ -101,6 +101,8 @@
       <div class="home-hero">
         <div class="hero-badge">🎯 Daily Practice Mock</div>
         <h1 class="hero-title">MISSION TCS DAILY MOCK<br /><span class="hero-day">DAY 9</span></h1>
+        <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:-1rem; margin-bottom:1rem;">BUILD v10.9
+          — STABLE</div>
         <div class="hero-student-name" id="heroStudentName"></div>
         <p class="hero-sub">25 Aptitude Questions + 2 Coding Problems · Practice Only · No Signup Required</p>
       </div>
@@ -119,7 +121,8 @@
             <div class="cat-item"><span class="cat-dot" style="background:#10b981"></span>Advanced Reasoning</div>
           </div>
           <div class="card-score-row" id="aptScoreRow">Score: <span id="aptScoreLive">0</span> / 25</div>
-          <button class="card-btn btn-primary" onclick="navigateTo('aptitude')">Start Aptitude →</button>
+          <button class="card-btn btn-primary" id="homeStartAptBtn" onclick="navigateTo('aptitude')">Start Aptitude
+            →</button>
           <button class="card-btn btn-ghost hidden" id="homeViewAptResult" onclick="downloadResult()"
             style="margin-top:0.5rem; border:1px solid #e2e8f0; width:100%;">📄 View Result (PDF)</button>
         </div>
@@ -137,7 +140,8 @@
           </div>
           <div class="card-score-row" id="codingScoreRow">Verdicts: <span id="codingVerdictLive">Not attempted</span>
           </div>
-          <button class="card-btn btn-secondary" onclick="navigateTo('coding')">Start Coding →</button>
+          <button class="card-btn btn-secondary" id="homeStartCodBtn" onclick="navigateTo('coding')">Start Coding
+            →</button>
           <button class="card-btn btn-ghost hidden" id="homeViewCodResult" onclick="downloadResult()"
             style="margin-top:0.5rem; border:1px solid #e2e8f0; width:100%;">📄 View Result (PDF)</button>
         </div>
@@ -410,8 +414,8 @@
   <!-- Print Section for Round 14 Native Printer Engine -->
   <div id="printSection"></div>
 
-  <script src="data.js?v=10.8"></script>
-  <script src="app.js?v=10.8"></script>
+  <script src="data.js?v=10.9"></script>
+  <script src="app.js?v=10.9"></script>
 </body>
 
 </html>

@@ -258,6 +258,9 @@ function downloadResult() {
     // Switch to completed view (behind the modal)
     navigateTo('completed');
 
+    // Force home UI to update (Round 20)
+    renderHomeGrids();
+
     const apt = getAptitudeScore();
     const cod = getCodingScore();
     const total = getTotalScore();
@@ -563,11 +566,22 @@ function renderHomeGrids() {
         if (el) el.textContent = p.title;
     });
 
-    // Dashboard Result Buttons (Round 19)
+    // Dashboard Result Buttons (Round 19 & 20)
     const aptRes = document.getElementById('homeViewAptResult');
     const codRes = document.getElementById('homeViewCodResult');
+    const aptStart = document.getElementById('homeStartAptBtn');
+    const codStart = document.getElementById('homeStartCodBtn');
+
     if (aptRes) aptRes.classList.toggle('hidden', !isTestCompleted);
     if (codRes) codRes.classList.toggle('hidden', !isTestCompleted);
+
+    if (isTestCompleted) {
+        if (aptStart) aptStart.textContent = 'Review Aptitude →';
+        if (codStart) codStart.textContent = 'Review Coding →';
+    } else {
+        if (aptStart) aptStart.textContent = 'Start Aptitude →';
+        if (codStart) codStart.textContent = 'Start Coding →';
+    }
 }
 
 function verdictClass(v) {
