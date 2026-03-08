@@ -562,6 +562,12 @@ function renderHomeGrids() {
         const el = document.getElementById(`probName${i}`);
         if (el) el.textContent = p.title;
     });
+
+    // Dashboard Result Buttons (Round 19)
+    const aptRes = document.getElementById('homeViewAptResult');
+    const codRes = document.getElementById('homeViewCodResult');
+    if (aptRes) aptRes.classList.toggle('hidden', !isTestCompleted);
+    if (codRes) codRes.classList.toggle('hidden', !isTestCompleted);
 }
 
 function verdictClass(v) {
