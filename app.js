@@ -337,8 +337,7 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    // Build completion HTML String (Round 10: Isolated String Version)
-    // This method is the most reliable as it builds the PDF in a clean memory space
+    // Build completion HTML String (The "Blueprint")
     const reportHtmlString = `
     <!DOCTYPE html>
     <html>
@@ -390,13 +389,16 @@ function downloadResult() {
     </body>
     </html>`;
 
-    // html2pdf options (Round 10: Isolated String rendering)
+    // Detect if mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // Engine Configs
     const opt = {
         margin: 0,
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 1.5, // Crisp quality
+            scale: isMobile ? 1.2 : 1.5, // Mobile use lower scale for memory safety
             useCORS: true,
             letterRendering: true,
             logging: false,
@@ -406,18 +408,41 @@ function downloadResult() {
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    // Execute download
-    showToast('🚀 Isolated Rendering in progress. Please wait...');
+    showToast(`🚀 ${isMobile ? 'Mobile' : 'Laptop'} Engine starting...`);
 
-    // Directly render from the HTML string for 100% isolation
-    setTimeout(() => {
-        html2pdf().set(opt).from(reportHtmlString).save().then(() => {
-            showToast('✅ PDF Downloaded Successfully!');
-        }).catch(err => {
-            console.error('PDF Error:', err);
-            showToast('❌ Generation failed. Try again.');
-        });
-    }, 2000); // 2-second buffer for paint/engine readiness
+    if (isMobile) {
+        // MOBILE ENGINE: Use Buffered-DOM (More compatible with phone browsers)
+        const container = document.createElement('div');
+        container.innerHTML = reportHtmlString;
+        container.style.position = 'fixed';
+        container.style.left = '0';
+        container.style.top = '0';
+        container.style.width = '595pt';
+        container.style.zIndex = '-9999';
+        container.style.background = '#ffffff';
+        document.body.appendChild(container);
+
+        setTimeout(() => {
+            html2pdf().set(opt).from(container).save().then(() => {
+                showToast('✅ PDF Downloaded Successfully!');
+                document.body.removeChild(container);
+            }).catch(err => {
+                console.error('PDF Error:', err);
+                showToast('❌ Generation failed. Try again.');
+                if (document.body.contains(container)) document.body.removeChild(container);
+            });
+        }, 2000);
+    } else {
+        // LAPTOP ENGINE: Use Isolated String (Reported as Perfect)
+        setTimeout(() => {
+            html2pdf().set(opt).from(reportHtmlString).save().then(() => {
+                showToast('✅ PDF Downloaded Successfully!');
+            }).catch(err => {
+                console.error('PDF Error:', err);
+                showToast('❌ Generation failed. Try again.');
+            });
+        }, 2000);
+    }
 }
 
 
