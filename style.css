@@ -1603,10 +1603,26 @@ pre {
   .admin-table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+    margin: 0.5rem 0;
   }
 
   .admin-table {
-    min-width: 600px;
+    min-width: 700px;
+    font-size: 0.78rem;
+  }
+
+  .admin-table thead th {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .admin-table td {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .admin-td-pct {
+    font-size: 0.85rem !important;
   }
 
   .admin-stats-row {
