@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MISSION TCS DAILY MOCK — DAY 9</title>
+  <title>MISSION TCS DAILY MOCK — DAY 10</title>
   <meta name="description" content="Daily TCS NQT Practice Mock — Day 9. 25 Aptitude Questions + 2 Coding Problems." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10.12" />
+  <link rel="stylesheet" href="style.css?v=11.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
@@ -21,7 +21,7 @@
     <div class="name-modal" id="nameModal">
       <div class="name-modal-icon">🎯</div>
       <div class="name-modal-title">MISSION TCS DAILY MOCK</div>
-      <div class="name-modal-sub">DAY 9 — Please enter your name to begin</div>
+      <div class="name-modal-sub">DAY 10 — Please enter your name to begin</div>
       <input class="name-input" id="nameInput" type="text" placeholder="Enter your full name..." maxlength="60"
         autocomplete="off" />
       <div class="name-error hidden" id="nameError">Please enter your name to continue.</div>
@@ -71,7 +71,7 @@
       <!-- Admin access: Ctrl+Shift+A or click logo 5× -->
     </nav>
     <div class="sidebar-footer">
-      <div class="day-badge">DAY 9</div>
+      <div class="day-badge">DAY 10</div>
       <div class="sidebar-footer-text">25 Aptitude · 2 Coding</div>
     </div>
   </aside>
@@ -85,7 +85,7 @@
     <header class="topbar">
       <button class="menu-btn" id="menuBtn" onclick="openSidebar()">☰</button>
       <div class="topbar-title">
-        <span class="topbar-main">MISSION TCS DAILY MOCK — DAY 9</span>
+        <span class="topbar-main">MISSION TCS DAILY MOCK — DAY 10</span>
         <span class="topbar-sub" id="topbarStudentName">25 Aptitude Questions + 2 Coding Problems</span>
       </div>
       <div class="topbar-action-btns">
@@ -100,18 +100,18 @@
     <section class="section active" id="section-home">
       <div class="home-hero">
         <div class="hero-badge">🎯 Daily Practice Mock</div>
-        <h1 class="hero-title">MISSION TCS DAILY MOCK<br /><span class="hero-day">DAY 9</span></h1>
-        <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:-1rem; margin-bottom:1rem;">BUILD v10.9
+        <h1 class="hero-title">MISSION TCS DAILY MOCK<br /><span class="hero-day">DAY 10</span></h1>
+        <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:-1rem; margin-bottom:1rem;">BUILD v11.0
           — STABLE</div>
         <div class="hero-student-name" id="heroStudentName"></div>
-        <p class="hero-sub">25 Aptitude Questions + 2 Coding Problems · Practice Only · No Signup Required</p>
+        <p class="hero-sub">35 Aptitude Questions + 2 Coding Problems · Practice Only · No Signup Required</p>
       </div>
       <div class="cards-grid">
         <div class="exam-card card-a">
           <div class="card-header">
             <div class="card-tag">PART A</div>
             <div class="card-title">Aptitude Practice</div>
-            <div class="card-count">25 Questions</div>
+            <div class="card-count">35 Questions</div>
           </div>
           <div class="card-categories">
             <div class="cat-item"><span class="cat-dot" style="background:#6366f1"></span>Numerical Ability</div>
@@ -120,7 +120,7 @@
             <div class="cat-item"><span class="cat-dot" style="background:#0ea5e9"></span>Advanced Quantitative</div>
             <div class="cat-item"><span class="cat-dot" style="background:#10b981"></span>Advanced Reasoning</div>
           </div>
-          <div class="card-score-row" id="aptScoreRow">Score: <span id="aptScoreLive">0</span> / 25</div>
+          <div class="card-score-row" id="aptScoreRow">Score: <span id="aptScoreLive">0</span> / 35</div>
           <button class="card-btn btn-primary" id="homeStartAptBtn" onclick="navigateTo('aptitude')">Start Aptitude
             →</button>
           <button class="card-btn btn-ghost hidden" id="homeViewAptResult" onclick="downloadResult()"
@@ -307,7 +307,7 @@
         <div class="admin-header">
           <div>
             <h2 class="admin-title">🔐 Admin Panel — Score Dashboard</h2>
-            <div class="admin-sub">MISSION TCS DAILY MOCK · DAY 9</div>
+            <div class="admin-sub">MISSION TCS DAILY MOCK · DAY 10</div>
           </div>
           <div class="admin-actions">
             <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
@@ -342,7 +342,7 @@
         <div class="completed-hero">
           <div class="completed-icon">✅</div>
           <h1 class="completed-title">Test Successfully Completed!</h1>
-          <p class="completed-sub">You have already submitted your response for Day 9.</p>
+          <p class="completed-sub">You have already submitted your response for Day 10.</p>
           <div class="completed-summary-box">
             <p>Your performance has been recorded by the admin.</p>
             <p>Download your result for detailed analysis.</p>
@@ -361,13 +361,13 @@
   <div class="day-complete-overlay" id="dayCompleteOverlay" onclick="closeDayComplete()"></div>
   <div class="day-complete-modal" id="dayCompleteModal">
     <div class="day-complete-confetti">🎉</div>
-    <div class="day-complete-badge">DAY 9 — COMPLETE</div>
+    <div class="day-complete-badge">DAY 10 — COMPLETE</div>
     <h2 class="day-complete-title">Mission Accomplished! 🏆</h2>
     <div class="day-complete-name" id="dayCompleteName"></div>
     <div class="day-complete-score-row" id="dayCompleteScore"></div>
     <div class="day-complete-streak">
       <div class="streak-line">🔥 Keep your streak alive</div>
-      <div class="streak-msg">Come back <strong>tomorrow</strong> for <span class="tomorrow-badge">DAY 9</span></div>
+      <div class="streak-msg">Come back <strong>tomorrow</strong> for <span class="tomorrow-badge">DAY 11</span></div>
       <div class="streak-sub">Consistency is the key to cracking TCS NQT 🚀</div>
     </div>
     <div class="day-complete-actions" style="display:flex; flex-direction:column; gap:0.75rem;">
@@ -414,8 +414,8 @@
   <!-- Print Section for Round 14 Native Printer Engine -->
   <div id="printSection"></div>
 
-  <script src="data.js?v=10.12"></script>
-  <script src="app.js?v=10.12"></script>
+  <script src="data.js?v=11.0"></script>
+  <script src="app.js?v=11.0"></script>
 </body>
 
 </html>

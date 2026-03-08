@@ -1,5 +1,5 @@
 // ====================================================
-// MISSION TCS DAILY MOCK — DAY 9  |  app.js
+// MISSION TCS DAILY MOCK — DAY 10 |  app.js
 // Real compiler: Judge0 CE | Admin: localStorage
 // ====================================================
 
@@ -8,8 +8,8 @@ const JUDGE0_URL = 'https://ce.judge0.com/submissions';
 const JUDGE0_HEADERS = { 'Content-Type': 'application/json' };
 const LANG_IDS = { python: 71, java: 62, cpp: 54, c: 50 };
 const ADMIN_PWD = 'Kush@178';
-const STORAGE_KEY = 'tcs_mock_day9';      // score records (all students)
-const SESSION_KEY = 'tcs_mock_session_day9';   // this student's live session
+const STORAGE_KEY = 'tcs_mock_day10';      // score records (all students)
+const SESSION_KEY = 'tcs_mock_session_day10';   // this student's live session
 
 // ===== SESSION STATE =====
 let studentName = '';
@@ -75,7 +75,7 @@ function adminSecretClick() {
 // ===== NAME MODAL =====
 function applyStudentNameUI() {
     document.getElementById('heroStudentName').textContent = `👤 ${studentName}`;
-    document.getElementById('topbarStudentName').textContent = `${studentName} — DAY 9`;
+    document.getElementById('topbarStudentName').textContent = `${studentName} — DAY 10`;
     const tag = document.getElementById('sidebarStudentName');
     tag.textContent = `👤 ${studentName}`;
     tag.style.display = 'block';
