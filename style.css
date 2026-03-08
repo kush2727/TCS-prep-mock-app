@@ -35,6 +35,13 @@ html {
   display: none !important;
 }
 
+.btn-disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  filter: grayscale(1) !important;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg);

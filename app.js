@@ -548,13 +548,11 @@ function renderQuestion(index) {
     const showExpBtn = document.getElementById('showExpBtn');
     if (showAnsBtn) {
         showAnsBtn.disabled = !isAnswered;
-        showAnsBtn.style.opacity = isAnswered ? '1' : '0.5';
-        showAnsBtn.style.cursor = isAnswered ? 'pointer' : 'not-allowed';
+        showAnsBtn.classList.toggle('btn-disabled', !isAnswered);
     }
     if (showExpBtn) {
         showExpBtn.disabled = !isAnswered;
-        showExpBtn.style.opacity = isAnswered ? '1' : '0.5';
-        showExpBtn.style.cursor = isAnswered ? 'pointer' : 'not-allowed';
+        showExpBtn.classList.toggle('btn-disabled', !isAnswered);
     }
 
     renderAptQuestionGrid();
