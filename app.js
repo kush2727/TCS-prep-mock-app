@@ -497,12 +497,7 @@ function closeDayComplete() {
 // ===== NAVIGATION =====
 
 function navigateTo(section) {
-    // Block access to Aptitude/Coding if test is completed
-    if (isTestCompleted && (section === 'aptitude' || section === 'coding')) {
-        showToast('🔒 Test already completed and submitted.');
-        navigateTo('completed');
-        return;
-    }
+    // Allow access to Aptitude/Coding even if test is completed (for review)
 
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
