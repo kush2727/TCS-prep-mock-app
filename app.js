@@ -408,35 +408,55 @@ function downloadResult() {
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    showToast(`🚀 ${isMobile ? 'Mobile' : 'Laptop'} Engine starting...`);
+    showToast(`🚀 ${isMobile ? 'Deep-Capture Mobile' : 'Laptop'} Engine starting...`);
 
     if (isMobile) {
-        // MOBILE ENGINE: Use Buffered-DOM (More compatible with phone browsers)
+        // MOBILE ENGINE: High-Visibility Capture (Round 12)
+        // Forces mobile browsers to render by placing it on top briefly
         const container = document.createElement('div');
         container.innerHTML = reportHtmlString;
         container.style.position = 'fixed';
         container.style.left = '0';
         container.style.top = '0';
-        container.style.width = '595pt';
-        container.style.zIndex = '-9999';
+        container.style.width = '100vw'; // Full width for mobile capture
+        container.style.height = '100vh';
+        container.style.overflow = 'auto';
+        container.style.zIndex = '20000'; // Above everything
         container.style.background = '#ffffff';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
+
+        // Add a "Processing" overlay so the user sees something professional
+        const overlay = document.createElement('div');
+        overlay.innerHTML = `
+            <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20001;color:#4f46e5;font-family:sans-serif;">
+                <div style="width:40px;height:40px;border:4px solid #e2e8f0;border-top:4px solid #4f46e5;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                <div style="margin-top:20px;font-weight:700;font-size:18px;">Generating Official Results...</div>
+                <div style="margin-top:10px;font-size:12px;color:#64748b;">Please wait 3 seconds for high-quality capture.</div>
+                <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+            </div>
+        `;
+
         document.body.appendChild(container);
+        document.body.appendChild(overlay);
 
         setTimeout(() => {
             html2pdf().set(opt).from(container).save().then(() => {
-                showToast('✅ PDF Downloaded Successfully!');
+                showToast('✅ Mobile PDF Downloaded!');
                 document.body.removeChild(container);
+                document.body.removeChild(overlay);
             }).catch(err => {
                 console.error('PDF Error:', err);
                 showToast('❌ Generation failed. Try again.');
                 if (document.body.contains(container)) document.body.removeChild(container);
+                if (document.body.contains(overlay)) document.body.removeChild(overlay);
             });
-        }, 2000);
+        }, 3000); // 3-second deep-paint buffer for mobile
     } else {
-        // LAPTOP ENGINE: Use Isolated String (Reported as Perfect)
+        // LAPTOP ENGINE: Use Isolated String (Confirmed Perfect by user)
         setTimeout(() => {
             html2pdf().set(opt).from(reportHtmlString).save().then(() => {
-                showToast('✅ PDF Downloaded Successfully!');
+                showToast('✅ Laptop PDF Downloaded!');
             }).catch(err => {
                 console.error('PDF Error:', err);
                 showToast('❌ Generation failed. Try again.');
