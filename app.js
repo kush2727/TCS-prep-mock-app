@@ -337,10 +337,10 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    // Build completion HTML (Round 6: Ultra-Safe Centered Version)
+    // Build completion HTML (Round 7: Universal Fit Auto-Scaling Version)
     const reportContainer = document.createElement('div');
     reportContainer.innerHTML = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:20px;width:650px;margin:0 auto;">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:20px;width:800px;margin:0 auto;">
       <!-- Header -->
       <div style="background:#4f46e5;border-radius:12px;padding:30px;color:#ffffff;margin-bottom:30px;text-align:center;">
         <div style="font-size:14px;font-weight:600;opacity:0.9;margin-bottom:5px;letter-spacing:1px;">MISSION TCS DAILY MOCK</div>
@@ -381,20 +381,18 @@ function downloadResult() {
       </div>
     </div>`;
 
-    // html2pdf options (Round 6: Ultra-Safe for Centering)
+    // html2pdf options (Round 7: Universal Auto-Fit)
     const opt = {
-        margin: [10, 20, 10, 20], // Higher side margins for perfect centering
+        margin: [10, 10, 10, 10], // Standard margins
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 1.0,
+            scale: 2.0, // High quality is safe with the auto-scale engine
             useCORS: true,
             letterRendering: true,
             logging: false,
             backgroundColor: '#ffffff',
-            windowWidth: 650, // Match inner width
-            width: 650,       // Force crop to width
-            scrollX: 0,
+            scrollX: 0, // CRITICAL: Stop the "Half-Printed" bug
             scrollY: 0
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -402,18 +400,19 @@ function downloadResult() {
     };
 
     // Execute download
-    showToast('🚀 Centering Report for PDF. Please wait...');
+    showToast('🚀 Finalizing Result. Please wait...');
 
     const reportHtml = reportContainer.innerHTML;
 
     reportContainer.style.position = 'absolute';
     reportContainer.style.left = '-9999px';
     reportContainer.style.top = '0';
-    reportContainer.style.width = '650px';
+    reportContainer.style.width = '800px'; // Universal standard
     document.body.appendChild(reportContainer);
 
     setTimeout(() => {
-        html2pdf().set(opt).from(reportHtml).save().then(() => {
+        // We use the direct container for more reliable Auto-Scaling
+        html2pdf().set(opt).from(reportContainer).save().then(() => {
             showToast('✅ PDF Downloaded successfully!');
             document.body.removeChild(reportContainer);
         }).catch(err => {
