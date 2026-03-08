@@ -340,7 +340,7 @@ function downloadResult() {
     // Build completion HTML (simplified for html2pdf rendering)
     const reportContainer = document.createElement('div');
     reportContainer.innerHTML = `
-    <div style="font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:1.5rem;max-width:800px;margin:0 auto;">
+    <div style="font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:1.5rem;width:720px;margin:0 auto;">
       <!-- Header -->
       <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:2rem;color:#fff;margin-bottom:2rem;text-align:center;">
         <div style="font-size:0.85rem;font-weight:600;opacity:0.85;margin-bottom:0.4rem;">MISSION TCS DAILY MOCK</div>
@@ -393,38 +393,32 @@ function downloadResult() {
             letterRendering: true,
             logging: false,
             backgroundColor: '#ffffff',
-            windowWidth: 800
+            windowWidth: 720 // Safe width for A4
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     // Execute download
-    showToast('🚀 Generating Final Report. Please wait...');
-
-    // Use the innerHTML string directly for cleaner rendering in an internal iframe
-    const reportHtml = reportContainer.innerHTML;
+    showToast('🚀 Fitting Report to A4. Please wait...');
 
     // We still append it to the DOM momentarily to ensure all styles are computed
     reportContainer.style.position = 'absolute';
     reportContainer.style.left = '-9999px';
     reportContainer.style.top = '0';
-    reportContainer.style.width = '800px';
+    reportContainer.style.width = '720px'; // Lock width
     document.body.appendChild(reportContainer);
 
-    // Give browser a full second to paint the new element
     setTimeout(() => {
-        html2pdf().set(opt).from(reportHtml).save().then(() => {
+        html2pdf().set(opt).from(reportContainer).save().then(() => {
             showToast('✅ PDF Downloaded successfully!');
             document.body.removeChild(reportContainer);
         }).catch(err => {
             console.error('PDF Error:', err);
             showToast('❌ PDF Generation failed. Try again.');
-            if (document.body.contains(reportContainer)) {
-                document.body.removeChild(reportContainer);
-            }
+            if (document.body.contains(reportContainer)) document.body.removeChild(reportContainer);
         });
-    }, 1000); // 1s delay for full stability
+    }, 1000);
 }
 
 
