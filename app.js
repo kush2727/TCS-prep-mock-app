@@ -630,8 +630,8 @@ function renderQuestion(index) {
         og.appendChild(btn);
     });
 
-    // Auto-show answer if wrong
-    if (isWrong) {
+    // Auto-show answer if wrong OR if in review mode (Round 23)
+    if (isWrong || isTestCompleted) {
         const correctIdx = ['A', 'B', 'C', 'D'].indexOf(q.answer);
         document.getElementById('answerVal').textContent = `Option ${q.answer}: ${q.options[correctIdx]}`;
         document.getElementById('expText').textContent = q.explanation;
