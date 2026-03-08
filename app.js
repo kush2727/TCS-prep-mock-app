@@ -388,10 +388,11 @@ function downloadResult() {
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 1.5,
+            scale: 1.0,  // Safe mode: Standard resolution for maximum compatibility
             useCORS: true,
             letterRendering: true,
             logging: false,
+            backgroundColor: '#ffffff', // Force white background
             scrollX: 0,
             scrollY: 0
         },
@@ -400,19 +401,17 @@ function downloadResult() {
     };
 
     // Execute download
-    showToast('🚀 Generating your PDF. Please wait...');
+    showToast('🚀 Generating Result PDF. Please wait...');
 
     // Temporarily add to DOM for better rendering
-    reportContainer.style.position = 'fixed';
-    reportContainer.style.left = '0';
+    reportContainer.style.position = 'absolute';
+    reportContainer.style.left = '-9999px'; // Move far off-screen instead of using opacity
     reportContainer.style.top = '0';
     reportContainer.style.width = '800px';
-    reportContainer.style.zIndex = '-9999';
-    reportContainer.style.opacity = '0';
-    reportContainer.style.pointerEvents = 'none';
+    reportContainer.style.background = '#ffffff';
     document.body.appendChild(reportContainer);
 
-    // Give browser a moment to paint the new element
+    // Give browser a full second to paint the new element
     setTimeout(() => {
         html2pdf().set(opt).from(reportContainer).save().then(() => {
             showToast('✅ PDF Downloaded successfully!');
@@ -424,7 +423,7 @@ function downloadResult() {
                 document.body.removeChild(reportContainer);
             }
         });
-    }, 500);
+    }, 1000); // 1s delay for full stability
 }
 
 
