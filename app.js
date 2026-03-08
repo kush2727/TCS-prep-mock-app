@@ -598,7 +598,7 @@ function renderQuestion(index) {
     document.getElementById('currentQNum').textContent = index + 1;
     document.getElementById('qNumBadge').textContent = `Q${q.id}`;
     document.getElementById('qCatBadge').textContent = q.category;
-    document.getElementById('qText').textContent = q.question;
+    document.getElementById('qText').innerHTML = q.question;
     document.getElementById('answerBox').classList.add('hidden');
     document.getElementById('explanationBox').classList.add('hidden');
 
@@ -634,7 +634,7 @@ function renderQuestion(index) {
     if (isWrong || isTestCompleted) {
         const correctIdx = ['A', 'B', 'C', 'D'].indexOf(q.answer);
         document.getElementById('answerVal').textContent = `Option ${q.answer}: ${q.options[correctIdx]}`;
-        document.getElementById('expText').textContent = q.explanation;
+        document.getElementById('expText').innerHTML = q.explanation;
         document.getElementById('answerBox').classList.remove('hidden');
         document.getElementById('explanationBox').classList.remove('hidden');
     }
