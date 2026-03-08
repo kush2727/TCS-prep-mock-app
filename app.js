@@ -570,6 +570,10 @@ function prevQuestion() {
     if (currentQuestion > 0) { currentQuestion--; renderQuestion(currentQuestion); }
 }
 function toggleAnswer() {
+    if (selectedOptions[currentQuestion] === undefined) {
+        showToast('⚠️ Please select an option first!');
+        return;
+    }
     const box = document.getElementById('answerBox');
     const q = aptitudeQuestions[currentQuestion];
     const correctIdx = ['A', 'B', 'C', 'D'].indexOf(q.answer);
@@ -577,6 +581,10 @@ function toggleAnswer() {
     box.classList.toggle('hidden');
 }
 function toggleExplanation() {
+    if (selectedOptions[currentQuestion] === undefined) {
+        showToast('⚠️ Please select an option first!');
+        return;
+    }
     const box = document.getElementById('explanationBox');
     document.getElementById('expText').textContent = aptitudeQuestions[currentQuestion].explanation;
     box.classList.toggle('hidden');
