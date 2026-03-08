@@ -337,81 +337,83 @@ function downloadResult() {
         </div>`;
     }).join('');
 
-    // Build completion HTML (Round 7: Universal Fit Auto-Scaling Version)
+    // Build completion HTML (Round 8: A4 Precision 1:1 Version)
     const reportContainer = document.createElement('div');
+    // 595px is exactly A4 width in Points (pt). Direct 1:1 mapping.
     reportContainer.innerHTML = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:20px;width:800px;margin:0 auto;">
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#ffffff;color:#0f172a;padding:30px;width:595px;box-sizing:border-box;margin:0 auto;">
       <!-- Header -->
-      <div style="background:#4f46e5;border-radius:12px;padding:30px;color:#ffffff;margin-bottom:30px;text-align:center;">
-        <div style="font-size:14px;font-weight:600;opacity:0.9;margin-bottom:5px;letter-spacing:1px;">MISSION TCS DAILY MOCK</div>
-        <div style="font-size:24px;font-weight:800;margin-bottom:10px;">DAY 9 — Result Report</div>
-        <div style="font-size:18px;font-weight:600;">👤 ${studentName}</div>
-        <div style="font-size:12px;opacity:0.8;margin-top:8px;">${now}</div>
+      <div style="background:#4f46e5;border-radius:10px;padding:25px;color:#ffffff;margin-bottom:25px;text-align:center;">
+        <div style="font-size:12px;font-weight:600;opacity:0.9;margin-bottom:4px;letter-spacing:1px;">MISSION TCS DAILY MOCK</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:8px;">DAY 9 — Result Report</div>
+        <div style="font-size:16px;font-weight:600;">👤 ${studentName}</div>
+        <div style="font-size:11px;opacity:0.8;margin-top:6px;">${now}</div>
       </div>
 
       <!-- Score Summary -->
-      <div style="display:flex;margin-bottom:30px;justify-content:space-between;">
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:15px;text-align:center;width:30%;">
-          <div style="font-size:24px;font-weight:800;color:#4f46e5;">${apt}<span style="font-size:14px;color:#94a3b8;">/25</span></div>
-          <div style="font-size:11px;color:#64748b;margin-top:4px;">Aptitude Score</div>
+      <div style="display:flex;margin-bottom:25px;justify-content:space-between;">
+        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;text-align:center;width:30%;">
+          <div style="font-size:22px;font-weight:800;color:#4f46e5;">${apt}<span style="font-size:12px;color:#94a3b8;">/25</span></div>
+          <div style="font-size:10px;color:#64748b;margin-top:2px;">Aptitude Score</div>
         </div>
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:15px;text-align:center;width:30%;">
-          <div style="font-size:24px;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:14px;color:#94a3b8;">/2</span></div>
-          <div style="font-size:11px;color:#64748b;margin-top:4px;">Coding Solved</div>
+        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;text-align:center;width:30%;">
+          <div style="font-size:22px;font-weight:800;color:#f59e0b;">${cod}<span style="font-size:12px;color:#94a3b8;">/2</span></div>
+          <div style="font-size:10px;color:#64748b;margin-top:2px;">Coding Solved</div>
         </div>
-        <div style="background:#4f46e5;border-radius:10px;padding:15px;text-align:center;width:30%;">
-          <div style="font-size:24px;font-weight:800;color:#ffffff;">${total}<span style="font-size:14px;opacity:0.8;">/27</span></div>
-          <div style="font-size:11px;color:#ffffff;opacity:0.9;margin-top:4px;">Total Score</div>
+        <div style="background:#4f46e5;border-radius:10px;padding:12px;text-align:center;width:30%;">
+          <div style="font-size:22px;font-weight:800;color:#ffffff;">${total}<span style="font-size:12px;opacity:0.8;">/27</span></div>
+          <div style="font-size:10px;color:#ffffff;opacity:0.9;margin-top:2px;">Total Score</div>
         </div>
       </div>
 
       <!-- Sections -->
-      <div style="font-size:16px;font-weight:800;margin-bottom:15px;color:#0f172a;border-left:4px solid #4f46e5;padding-left:12px;">
+      <div style="font-size:15px;font-weight:800;margin-bottom:12px;color:#0f172a;border-left:4px solid #4f46e5;padding-left:10px;">
         Part A — Aptitude Questions (${apt}/25 correct)
       </div>
       ${qRows}
 
-      <div style="font-size:16px;font-weight:800;margin:30px 0 15px;color:#0f172a;border-left:4px solid #f59e0b;padding-left:12px;">
+      <div style="font-size:15px;font-weight:800;margin:25px 0 12px;color:#0f172a;border-left:4px solid #f59e0b;padding-left:10px;">
         Part B — Coding Problems (${cod}/2 Accepted)
       </div>
       ${codingHtml}
 
-      <div style="text-align:center;margin-top:30px;font-size:12px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:20px;">
+      <div style="text-align:center;margin-top:25px;font-size:10px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:15px;">
         Generated by MISSION TCS DAILY MOCK · Day 9 · ${now}
       </div>
     </div>`;
 
-    // html2pdf options (Round 7: Universal Auto-Fit)
+    // html2pdf options (Round 8: A4 Precision pt Scale)
     const opt = {
-        margin: [10, 10, 10, 10], // Standard margins
+        margin: 0, // No external margins; content width 595pt matches A4 exactly
         filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 2.0, // High quality is safe with the auto-scale engine
+            scale: 1.0, // 1:1 scale for exact pt-to-px mapping
             useCORS: true,
             letterRendering: true,
             logging: false,
             backgroundColor: '#ffffff',
-            scrollX: 0, // CRITICAL: Stop the "Half-Printed" bug
-            scrollY: 0
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: 595,
+            width: 595
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     // Execute download
-    showToast('🚀 Finalizing Result. Please wait...');
+    showToast('🚀 Printing A4 Blueprint. Please wait...');
 
-    const reportHtml = reportContainer.innerHTML;
-
-    reportContainer.style.position = 'absolute';
-    reportContainer.style.left = '-9999px';
+    reportContainer.style.position = 'fixed';
+    reportContainer.style.left = '0';
     reportContainer.style.top = '0';
-    reportContainer.style.width = '800px'; // Universal standard
+    reportContainer.style.width = '595px';
+    reportContainer.style.zIndex = '-9999';
+    reportContainer.style.visibility = 'visible'; // Keep visible for capture
     document.body.appendChild(reportContainer);
 
     setTimeout(() => {
-        // We use the direct container for more reliable Auto-Scaling
         html2pdf().set(opt).from(reportContainer).save().then(() => {
             showToast('✅ PDF Downloaded successfully!');
             document.body.removeChild(reportContainer);
