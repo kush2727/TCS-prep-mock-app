@@ -10,7 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10.6" />
+  <link rel="stylesheet" href="style.css?v=10.7" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
@@ -120,6 +120,8 @@
           </div>
           <div class="card-score-row" id="aptScoreRow">Score: <span id="aptScoreLive">0</span> / 25</div>
           <button class="card-btn btn-primary" onclick="navigateTo('aptitude')">Start Aptitude →</button>
+          <button class="card-btn btn-ghost hidden" id="homeViewAptResult" onclick="downloadResult()"
+            style="margin-top:0.5rem; border:1px solid #e2e8f0; width:100%;">📄 View Result (PDF)</button>
         </div>
         <div class="exam-card card-b">
           <div class="card-header">
@@ -136,6 +138,8 @@
           <div class="card-score-row" id="codingScoreRow">Verdicts: <span id="codingVerdictLive">Not attempted</span>
           </div>
           <button class="card-btn btn-secondary" onclick="navigateTo('coding')">Start Coding →</button>
+          <button class="card-btn btn-ghost hidden" id="homeViewCodResult" onclick="downloadResult()"
+            style="margin-top:0.5rem; border:1px solid #e2e8f0; width:100%;">📄 View Result (PDF)</button>
         </div>
       </div>
       <div class="section-title-row">
@@ -406,8 +410,8 @@
   <!-- Print Section for Round 14 Native Printer Engine -->
   <div id="printSection"></div>
 
-  <script src="data.js?v=10.6"></script>
-  <script src="app.js?v=10.6"></script>
+  <script src="data.js?v=10.7"></script>
+  <script src="app.js?v=10.7"></script>
 </body>
 
 </html>
