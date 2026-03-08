@@ -517,11 +517,15 @@ function renderQuestion(index) {
     const og = document.getElementById('optionsGrid');
     og.innerHTML = '';
     const labels = ['A', 'B', 'C', 'D'];
+
+    const isAnswered = selectedOptions[index] !== undefined;
+    const isWrong = isAnswered && selectedOptions[index] !== q.answer;
+
     q.options.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         const label = labels[i];
-        if (selectedOptions[index] !== undefined) {
+        if (isAnswered) {
             if (selectedOptions[index] === label) btn.classList.add(label === q.answer ? 'correct' : 'wrong');
             if (label === q.answer && selectedOptions[index] !== label) btn.classList.add('correct');
         }
@@ -529,6 +533,15 @@ function renderQuestion(index) {
         btn.addEventListener('click', () => selectOption(index, label, q.answer));
         og.appendChild(btn);
     });
+
+    // Auto-show answer if wrong
+    if (isWrong) {
+        const correctIdx = ['A', 'B', 'C', 'D'].indexOf(q.answer);
+        document.getElementById('answerVal').textContent = `Option ${q.answer}: ${q.options[correctIdx]}`;
+        document.getElementById('expText').textContent = q.explanation;
+        document.getElementById('answerBox').classList.remove('hidden');
+        document.getElementById('explanationBox').classList.remove('hidden');
+    }
 
     renderAptQuestionGrid();
     renderHomeGrids();
