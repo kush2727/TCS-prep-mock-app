@@ -402,7 +402,7 @@ function downloadResult() {
     // Engine Configs
     const opt = {
         margin: 0,
-        filename: `TCS_Mock_Day9_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
+        filename: `TCS_Mock_Day10_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
             scale: isMobile ? 1.2 : 1.5, // Mobile use lower scale for memory safety
