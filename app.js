@@ -365,7 +365,7 @@ function downloadResult() {
       <div class="page">
         <div class="header">
           <div style="font-size: 10pt; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1pt;">TCS DAILY MOCK</div>
-          <div style="font-size: 22pt; font-weight: 800; margin: 5pt 0;">Day 9 — Result</div>
+          <div style="font-size: 22pt; font-weight: 800; margin: 5pt 0;">Day 10 — Result</div>
           <div class="badge">👤 ${studentName}</div>
           <div style="font-size: 10pt; opacity: 0.8; margin-top: 5pt;">${now}</div>
         </div>
@@ -390,7 +390,7 @@ function downloadResult() {
         ${codingHtml}
 
         <div style="text-align: center; margin-top: 30pt; font-size: 10pt; color: #94a3b8; border-top: 1pt solid #e2e8f0; padding-top: 20pt;">
-          Mock App Experience · Day 9 · Generated on ${now}
+          Mock App Experience · Day 10 · Generated on ${now}
         </div>
       </div>
     </body>
@@ -438,7 +438,7 @@ function downloadResult() {
             <div class="page">
                 <div class="header">
                   <div style="font-size: 10px; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">TCS DAILY MOCK (v10.4)</div>
-                  <div style="font-size: 20px; font-weight: 800; margin: 4px 0;">Day 9 — Result</div>
+                  <div style="font-size: 20px; font-weight: 800; margin: 4px 0;">Day 10 — Result</div>
                   <div class="badge">👤 ${studentName}</div>
                 </div>
                 
