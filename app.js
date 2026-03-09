@@ -12,8 +12,8 @@ const STORAGE_KEY = 'tcs_mock_day10';      // score records (all students)
 const SESSION_KEY = 'tcs_mock_session_day10';   // this student's live session
 
 // ===== CLOUD DB CONFIG (JSONBin.io) =====
-const JSONBIN_BIN_ID = 'REPLACE_WITH_YOUR_BIN_ID';  // e.g. '65ce...'
-const JSONBIN_API_KEY = 'REPLACE_WITH_YOUR_API_KEY'; // e.g. '$2b$10$...'
+const JSONBIN_BIN_ID = '69ae8433d0ea881f40ff56e5';
+const JSONBIN_API_KEY = '$2a$10$vQUUIsPP6.0dHopDdKgMsutCbWeKwyRUuPSZdRJ2FgWyshVhSHPei';
 const JSONBIN_HEADERS = {
     'Content-Type': 'application/json',
     'X-Master-Key': JSONBIN_API_KEY
@@ -238,19 +238,18 @@ function saveScore() {
                 let cloudData = [];
                 if (resp.ok) {
                     const json = await resp.json();
-                    cloudData = Array.isArray(json.record) ? json.record : [];
+                    // Handle both root array and {submissions: []} wrapper
+                    cloudData = Array.isArray(json.record) ? json.record : (json.record.submissions || []);
                 }
 
-                // 2. Update/Add current student
                 const cIdx = cloudData.findIndex(r => r.name === studentName);
                 if (cIdx >= 0) cloudData[cIdx] = record;
                 else cloudData.push(record);
 
-                // 3. Save back
                 await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
                     method: 'PUT',
                     headers: JSONBIN_HEADERS,
-                    body: JSON.stringify(cloudData)
+                    body: JSON.stringify({ submissions: cloudData })
                 });
                 console.log('Cloud sync success');
             } catch (e) {
@@ -1033,7 +1032,7 @@ async function loadAdminPanel() {
             });
             if (resp.ok) {
                 const json = await resp.json();
-                records = Array.isArray(json.record) ? json.record : [];
+                records = Array.isArray(json.record) ? json.record : (json.record.submissions || []);
             }
         } catch (e) {
             console.error('Cloud fetch failed, using local.');
