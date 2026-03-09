@@ -11,6 +11,14 @@ const ADMIN_PWD = 'Kush@178';
 const STORAGE_KEY = 'tcs_mock_day10';      // score records (all students)
 const SESSION_KEY = 'tcs_mock_session_day10';   // this student's live session
 
+// ===== CLOUD DB CONFIG (JSONBin.io) =====
+const JSONBIN_BIN_ID = 'REPLACE_WITH_YOUR_BIN_ID';  // e.g. '65ce...'
+const JSONBIN_API_KEY = 'REPLACE_WITH_YOUR_API_KEY'; // e.g. '$2b$10$...'
+const JSONBIN_HEADERS = {
+    'Content-Type': 'application/json',
+    'X-Master-Key': JSONBIN_API_KEY
+};
+
 // ===== SESSION STATE =====
 let studentName = '';
 let currentSection = 'home';
@@ -189,6 +197,9 @@ function saveScore() {
         return;
     }
 
+    // Check if cloud sync is active
+    const isCloudSync = JSONBIN_BIN_ID && !JSONBIN_BIN_ID.startsWith('REPLACE');
+
     const aptScore = getAptitudeScore();
     const codScore = getCodingScore();
     const total = getTotalScore(); // out of 27
@@ -215,7 +226,40 @@ function saveScore() {
     else existing.push(record);
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-    showToast(`✅ Score saved! ${studentName}: ${total}/27 — Downloading your result...`);
+
+    // CLOUD SYNC: Push to JSONBin
+    if (isCloudSync) {
+        (async () => {
+            try {
+                // 1. Get current cloud data
+                const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: JSONBIN_HEADERS
+                });
+                let cloudData = [];
+                if (resp.ok) {
+                    const json = await resp.json();
+                    cloudData = Array.isArray(json.record) ? json.record : [];
+                }
+
+                // 2. Update/Add current student
+                const cIdx = cloudData.findIndex(r => r.name === studentName);
+                if (cIdx >= 0) cloudData[cIdx] = record;
+                else cloudData.push(record);
+
+                // 3. Save back
+                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: JSONBIN_HEADERS,
+                    body: JSON.stringify(cloudData)
+                });
+                console.log('Cloud sync success');
+            } catch (e) {
+                console.error('Cloud sync failed:', e);
+            }
+        })();
+    }
+
+    showToast(`✅ Score saved! ${studentName}: ${total}/${aptitudeQuestions.length + codingProblems.length} — Downloading your result...`);
 
     // Instant feedback: Show celebration card
     openDayComplete();
@@ -977,8 +1021,27 @@ function displayTestCaseResult(result, expected) {
 }
 
 // ===== ADMIN PANEL =====
-function loadAdminPanel() {
-    const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+async function loadAdminPanel() {
+    const isCloudSync = JSONBIN_BIN_ID && !JSONBIN_BIN_ID.startsWith('REPLACE');
+    let records = [];
+
+    if (isCloudSync) {
+        document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;">☁️ Syncing with Cloud Database...</td></tr>';
+        try {
+            const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                headers: JSONBIN_HEADERS
+            });
+            if (resp.ok) {
+                const json = await resp.json();
+                records = Array.isArray(json.record) ? json.record : [];
+            }
+        } catch (e) {
+            console.error('Cloud fetch failed, using local.');
+            records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+    } else {
+        records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
     const tbody = document.getElementById('adminTableBody');
     const empty = document.getElementById('adminEmpty');
     const statsRow = document.getElementById('adminStatsRow');
