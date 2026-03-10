@@ -1021,65 +1021,107 @@ function displayTestCaseResult(result, expected) {
 }
 
 // ===== ADMIN PANEL =====
-// 1. Group records by Day and Sort descending
-const grouped = {};
-records.forEach(r => {
-    const d = r.day || 11;
-    if (!grouped[d]) grouped[d] = [];
-    grouped[d].push(r);
-});
+async function loadAdminPanel() {
+    const isCloudSync = JSONBIN_BIN_ID && !JSONBIN_BIN_ID.startsWith('REPLACE');
+    let records = [];
 
-const sortedDays = Object.keys(grouped).sort((a, b) => b - a);
+    if (isCloudSync) {
+        const tbodyMsg = document.getElementById('adminTableBody');
+        if (tbodyMsg) tbodyMsg.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;">☁️ Syncing with Cloud Database...</td></tr>';
+        try {
+            const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                headers: JSONBIN_HEADERS
+            });
+            if (resp.ok) {
+                const json = await resp.json();
+                records = Array.isArray(json.record) ? json.record : (json.record.submissions || []);
+            }
+        } catch (e) {
+            console.error('Cloud fetch failed, using local.');
+            records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+    } else {
+        records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
 
-// 2. Render each group
-sortedDays.forEach(day => {
-    // Group Header Row
-    const separator = document.createElement('tr');
-    separator.style.background = '#f8fafc';
-    separator.style.fontWeight = '800';
-    separator.innerHTML = `
+    const tbody = document.getElementById('adminTableBody');
+    const empty = document.getElementById('adminEmpty');
+    const statsRow = document.getElementById('adminStatsRow');
+    if (!tbody || !empty || !statsRow) return;
+
+    tbody.innerHTML = '';
+
+    if (records.length === 0) {
+        empty.style.display = 'block';
+        statsRow.innerHTML = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    // 1. Group records by Day and Sort descending
+    const grouped = {};
+    records.forEach(r => {
+        const d = r.day || 11;
+        if (!grouped[d]) grouped[d] = [];
+        grouped[d].push(r);
+    });
+
+    const sortedDays = Object.keys(grouped).sort((a, b) => b - a);
+
+    // 2. Render each group
+    sortedDays.forEach(day => {
+        // Group Header Row
+        const separator = document.createElement('tr');
+        separator.style.background = '#f8fafc';
+        separator.style.fontWeight = '800';
+        separator.innerHTML = `
             <td colspan="8" style="text-align:center; color:var(--primary); padding:0.75rem; border-bottom:2px solid var(--primary); font-size:1rem; letter-spacing:1px;">
-                ☁️ ——— DAY ${day} SUBMISSIONS ——— ☁️
+                ——— DAY ${day} SUBMISSIONS ———
             </td>
         `;
-    tbody.appendChild(separator);
+        tbody.appendChild(separator);
 
-    // Sort students within day by time descending
-    const dayRecords = grouped[day].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+        // Sort students within day by time descending
+        const dayRecords = grouped[day].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
-    dayRecords.forEach((r, i) => {
-        const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
-        const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
-        const grandTotal = r.grandTotal ?? (35 + 2);
-        const scoreColor = total >= (grandTotal * 0.8) ? '#10b981' : total >= (grandTotal * 0.5) ? '#f59e0b' : '#ef4444';
+        dayRecords.forEach((r, i) => {
+            const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
+            const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
+            const grandTotal = r.grandTotal ?? (codingProblems.length + aptitudeQuestions.length);
+            const scoreColor = total >= (grandTotal * 0.8) ? '#10b981' : total >= (grandTotal * 0.5) ? '#f59e0b' : '#ef4444';
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
                 <td>${i + 1}</td>
                 <td style="font-weight:700; color:var(--primary)">DAY ${day}</td>
                 <td class="admin-td-name">${escapeHtml(r.name)}</td>
                 <td class="admin-td-time">${r.submittedAt}</td>
-                <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || 35}</td>
+                <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || aptitudeQuestions.length}</td>
                 <td>${verdictBadge(r.coding[0]?.verdict)}</td>
                 <td>${verdictBadge(r.coding[1]?.verdict)}</td>
                 <td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
             `;
-        tbody.appendChild(tr);
+            tbody.appendChild(tr);
+        });
     });
-});
-<td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
-`;
-        tbody.appendChild(tr);
-    });
+
+    // Stats based on ALL records
+    const acceptedAny = records.filter(r => r.coding.some(c => c.verdict === 'Accepted')).length;
+    const avgApt = records.length ? (records.reduce((s, r) => s + r.aptitudeScore, 0) / records.length).toFixed(1) : '—';
+    statsRow.innerHTML = `
+        <div class="admin-stat-card"><div class="admin-stat-num">${records.length}</div><div class="admin-stat-label">Total Submissions</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-num">${avgApt}</div><div class="admin-stat-label">Avg Aptitude</div></div>
+        <div class="admin-stat-card"><div class="admin-stat-num">${acceptedAny}</div><div class="admin-stat-label">Solved ≥1 Problem</div></div>
+    `;
 }
 
 function verdictBadge(v) {
-    if (!v) return `< span class="vbadge vbadge-none" >—</span > `;
-    return `< span class="vbadge ${verdictClass(v)}" > ${ v }</span > `;
+    if (!v || v === 'Not Attempted') return `<span class="vbadge vbadge-none">—</span>`;
+    return `<span class="vbadge ${verdictClass(v)}">${v}</span>`;
 }
 
 function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 // Same but for code blocks inside the PDF (preserves indentation)
 function escapeForHtml(str) {
@@ -1090,19 +1132,16 @@ function escapeForHtml(str) {
 function exportCSV() {
     const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (!records.length) { showToast('No records to export.'); return; }
-
-    const headers = ['#', 'Name', 'Submitted At', 'Aptitude Score', 'Aptitude Total', 'P1 Verdict', 'P1 Time', 'P2 Verdict', 'P2 Time'];
+    const headers = ['#', 'Day', 'Name', 'Submitted At', 'Aptitude Score', 'P1 Verdict', 'P2 Verdict'];
     const rows = records.map((r, i) => [
-        i + 1, r.name, r.submittedAt, r.aptitudeScore, r.aptitudeTotal,
-        r.coding[0]?.verdict || '—', r.coding[0]?.time || '—',
-        r.coding[1]?.verdict || '—', r.coding[1]?.time || '—'
+        i + 1, r.day || 11, r.name, r.submittedAt, r.aptitudeScore,
+        r.coding[0]?.verdict || '—', r.coding[1]?.verdict || '—'
     ]);
-
     const csv = [headers, ...rows].map(row => row.map(v => `"${v}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'TCS_Mock_Day9_Scores.csv'; a.click();
+    a.href = url; a.download = `TCS_Mock_Day11_Global_Results.csv`; a.click();
     URL.revokeObjectURL(url);
 }
 
@@ -1121,12 +1160,12 @@ function showToast(msg) {
     toast.className = 'toast';
     toast.textContent = msg;
     toast.style.cssText = `
-position: fixed; bottom: 2rem; right: 2rem;
-background:#1e293b; color: #fff;
-padding: 0.75rem 1.5rem; border - radius: 10px; font - size: 0.85rem;
-font - weight: 500; z - index: 9999; box - shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-animation:slideInToast 0.3s ease;
-`;
+        position: fixed; bottom: 2rem; right: 2rem;
+        background: #1e293b; color: #fff;
+        padding: 0.75rem 1.5rem; border-radius: 10px; font-size: 0.85rem;
+        font-weight: 500; z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        animation: slideInToast 0.3s ease;
+    `;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2800);
 }
@@ -1138,14 +1177,14 @@ document.head.appendChild(toastStyle);
 function openSolution() {
     const p = codingProblems[currentProblem];
     if (!p?.solution) return;
-    document.getElementById('solBadge').textContent = `P${ p.id } `;
-    document.getElementById('solTitle').textContent = `${ p.title } — Solution`;
+    document.getElementById('solBadge').textContent = `P${p.id}`;
+    document.getElementById('solTitle').textContent = `${p.title} — Solution`;
     document.getElementById('solApproach').textContent = p.solution.approach;
     const cr = document.getElementById('solComplexityRow');
     cr.innerHTML = `
-    < div class="sol-badge sol-badge-time" >⏱ Time: ${ p.solution.timeComplexity }</div >
+        <div class="sol-badge sol-badge-time">⏱ Time: ${p.solution.timeComplexity}</div>
         <div class="sol-badge sol-badge-space">📦 Space: ${p.solution.spaceComplexity}</div>
-`;
+    `;
     currentSolLang = document.getElementById('langSelect').value;
     updateSolCode(); updateSolTabs();
     document.getElementById('solOverlay').classList.add('open');
