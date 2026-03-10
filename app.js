@@ -1,5 +1,5 @@
 // ====================================================
-// MISSION TCS DAILY MOCK — DAY 10 |  app.js
+// MISSION TCS DAILY MOCK — DAY 11 |  app.js
 // Real compiler: Judge0 CE | Admin: localStorage
 // ====================================================
 
@@ -8,8 +8,8 @@ const JUDGE0_URL = 'https://ce.judge0.com/submissions';
 const JUDGE0_HEADERS = { 'Content-Type': 'application/json' };
 const LANG_IDS = { python: 71, java: 62, cpp: 54, c: 50 };
 const ADMIN_PWD = 'Kush@178';
-const STORAGE_KEY = 'tcs_mock_day10';      // score records (all students)
-const SESSION_KEY = 'tcs_mock_session_day10';   // this student's live session
+const STORAGE_KEY = 'tcs_mock_day11';      // score records (all students)
+const SESSION_KEY = 'tcs_mock_session_day11';   // this student's live session
 
 // ===== CLOUD DB CONFIG (JSONBin.io) =====
 const JSONBIN_BIN_ID = '69ae8433d0ea881f40ff56e5';
@@ -83,7 +83,7 @@ function adminSecretClick() {
 // ===== NAME MODAL =====
 function applyStudentNameUI() {
     document.getElementById('heroStudentName').textContent = `👤 ${studentName}`;
-    document.getElementById('topbarStudentName').textContent = `${studentName} — DAY 10`;
+    document.getElementById('topbarStudentName').textContent = `${studentName} — DAY 11`;
     const tag = document.getElementById('sidebarStudentName');
     tag.textContent = `👤 ${studentName}`;
     tag.style.display = 'block';
@@ -408,7 +408,7 @@ function downloadResult() {
       <div class="page">
         <div class="header">
           <div style="font-size: 10pt; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1pt;">TCS DAILY MOCK</div>
-          <div style="font-size: 22pt; font-weight: 800; margin: 5pt 0;">Day 10 — Result</div>
+          <div style="font-size: 22pt; font-weight: 800; margin: 5pt 0;">Day 11 — Result</div>
           <div class="badge">👤 ${studentName}</div>
           <div style="font-size: 10pt; opacity: 0.8; margin-top: 5pt;">${now}</div>
         </div>
@@ -433,7 +433,7 @@ function downloadResult() {
         ${codingHtml}
 
         <div style="text-align: center; margin-top: 30pt; font-size: 10pt; color: #94a3b8; border-top: 1pt solid #e2e8f0; padding-top: 20pt;">
-          Mock App Experience · Day 10 · Generated on ${now}
+          Mock App Experience · Day 11 · Generated on ${now}
         </div>
       </div>
     </body>
@@ -445,7 +445,7 @@ function downloadResult() {
     // Engine Configs
     const opt = {
         margin: 0,
-        filename: `TCS_Mock_Day10_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
+        filename: `TCS_Mock_Day11_Result_${studentName.replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
             scale: isMobile ? 1.2 : 1.5, // Mobile use lower scale for memory safety
@@ -481,7 +481,7 @@ function downloadResult() {
             <div class="page">
                 <div class="header">
                   <div style="font-size: 10px; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">TCS DAILY MOCK (v10.4)</div>
-                  <div style="font-size: 20px; font-weight: 800; margin: 4px 0;">Day 10 — Result</div>
+                  <div style="font-size: 20px; font-weight: 800; margin: 4px 0;">Day 11 — Result</div>
                   <div class="badge">👤 ${studentName}</div>
                 </div>
                 
