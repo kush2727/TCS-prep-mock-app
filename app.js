@@ -1021,98 +1021,61 @@ function displayTestCaseResult(result, expected) {
 }
 
 // ===== ADMIN PANEL =====
-async function loadAdminPanel() {
-    const isCloudSync = JSONBIN_BIN_ID && !JSONBIN_BIN_ID.startsWith('REPLACE');
-    let records = [];
+// 1. Group records by Day and Sort descending
+const grouped = {};
+records.forEach(r => {
+    const d = r.day || 11;
+    if (!grouped[d]) grouped[d] = [];
+    grouped[d].push(r);
+});
 
-    if (isCloudSync) {
-        document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;">☁️ Syncing with Cloud Database...</td></tr>';
-        try {
-            const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                headers: JSONBIN_HEADERS
-            });
-            if (resp.ok) {
-                const json = await resp.json();
-                records = Array.isArray(json.record) ? json.record : (json.record.submissions || []);
-            }
-        } catch (e) {
-            console.error('Cloud fetch failed, using local.');
-            records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        }
-    } else {
-        records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    }
+const sortedDays = Object.keys(grouped).sort((a, b) => b - a);
 
-    // FILTER: Only show current day by default (Day 11)
-    const currentDayRecords = records.filter(r => r.day === 11);
-
-    const tbody = document.getElementById('adminTableBody');
-    const empty = document.getElementById('adminEmpty');
-    const statsRow = document.getElementById('adminStatsRow');
-    tbody.innerHTML = '';
-
-    // Update Headers dynamically before checking length
-    const headerRow = document.querySelector('#adminTable thead tr');
-    const totalPossiblePoints = aptitudeQuestions.length + codingProblems.length;
-    if (headerRow && codingProblems.length >= 2) {
-        headerRow.innerHTML = `
-            <th>#</th>
-            <th>Day</th>
-            <th>Name</th>
-            <th>Submitted At</th>
-            <th>Aptitude</th>
-            <th>P1: ${codingProblems[0].title}</th>
-            <th>P2: ${codingProblems[1].title}</th>
-            <th>Total (/${totalPossiblePoints})</th>
+// 2. Render each group
+sortedDays.forEach(day => {
+    // Group Header Row
+    const separator = document.createElement('tr');
+    separator.style.background = '#f8fafc';
+    separator.style.fontWeight = '800';
+    separator.innerHTML = `
+            <td colspan="8" style="text-align:center; color:var(--primary); padding:0.75rem; border-bottom:2px solid var(--primary); font-size:1rem; letter-spacing:1px;">
+                ☁️ ——— DAY ${day} SUBMISSIONS ——— ☁️
+            </td>
         `;
-    }
+    tbody.appendChild(separator);
 
-    // Stats based on filtered records
-    const totalStudents = currentDayRecords.length;
-    const avgApt = currentDayRecords.length
-        ? (currentDayRecords.reduce((s, r) => s + r.aptitudeScore, 0) / currentDayRecords.length).toFixed(1)
-        : '—';
-    const acceptedAny = currentDayRecords.filter(r => r.coding.some(c => c.verdict === 'Accepted')).length;
+    // Sort students within day by time descending
+    const dayRecords = grouped[day].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
-    statsRow.innerHTML = `
-    <div class="admin-stat-card"><div class="admin-stat-num">${totalStudents}</div><div class="admin-stat-label">Students</div></div>
-    <div class="admin-stat-card"><div class="admin-stat-num">${avgApt}</div><div class="admin-stat-label">Avg Aptitude</div></div>
-    <div class="admin-stat-card"><div class="admin-stat-num">${acceptedAny}</div><div class="admin-stat-label">Solved ≥1 Problem</div></div>
-  `;
-
-    if (currentDayRecords.length === 0) {
-        empty.style.display = 'block';
-        empty.innerHTML = `<div style="padding: 2rem; color: #64748b;">No submissions for Day 11 yet.<br><small>Found ${records.length - currentDayRecords.length} records from previous days.</small></div>`;
-        return;
-    }
-    empty.style.display = 'none';
-
-    currentDayRecords.forEach((r, i) => {
+    dayRecords.forEach((r, i) => {
         const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
-        // recalculate for old records if totalScore is missing
         const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
-        const grandTotal = r.grandTotal ?? (aptitudeQuestions.length + codingProblems.length);
-
+        const grandTotal = r.grandTotal ?? (35 + 2);
         const scoreColor = total >= (grandTotal * 0.8) ? '#10b981' : total >= (grandTotal * 0.5) ? '#f59e0b' : '#ef4444';
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-      <td>${i + 1}</td>
-      <td style="font-weight:700; color:var(--primary)">DAY ${r.day || '11'}</td>
-      <td class="admin-td-name">${escapeHtml(r.name)}</td>
-      <td class="admin-td-time">${r.submittedAt}</td>
-      <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || aptitudeQuestions.length}</td>
-      <td>${verdictBadge(r.coding[0]?.verdict)}</td>
-      <td>${verdictBadge(r.coding[1]?.verdict)}</td>
-      <td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
-    `;
+                <td>${i + 1}</td>
+                <td style="font-weight:700; color:var(--primary)">DAY ${day}</td>
+                <td class="admin-td-name">${escapeHtml(r.name)}</td>
+                <td class="admin-td-time">${r.submittedAt}</td>
+                <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || 35}</td>
+                <td>${verdictBadge(r.coding[0]?.verdict)}</td>
+                <td>${verdictBadge(r.coding[1]?.verdict)}</td>
+                <td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
+            `;
+        tbody.appendChild(tr);
+    });
+});
+<td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
+`;
         tbody.appendChild(tr);
     });
 }
 
 function verdictBadge(v) {
-    if (!v) return `<span class="vbadge vbadge-none">—</span>`;
-    return `<span class="vbadge ${verdictClass(v)}">${v}</span>`;
+    if (!v) return `< span class="vbadge vbadge-none" >—</span > `;
+    return `< span class="vbadge ${verdictClass(v)}" > ${ v }</span > `;
 }
 
 function escapeHtml(str) {
@@ -1158,31 +1121,31 @@ function showToast(msg) {
     toast.className = 'toast';
     toast.textContent = msg;
     toast.style.cssText = `
-    position:fixed;bottom:2rem;right:2rem;
-    background:#1e293b;color:#fff;
-    padding:0.75rem 1.5rem;border-radius:10px;font-size:0.85rem;
-    font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);
-    animation:slideInToast 0.3s ease;
-  `;
+position: fixed; bottom: 2rem; right: 2rem;
+background:#1e293b; color: #fff;
+padding: 0.75rem 1.5rem; border - radius: 10px; font - size: 0.85rem;
+font - weight: 500; z - index: 9999; box - shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+animation:slideInToast 0.3s ease;
+`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2800);
 }
 const toastStyle = document.createElement('style');
-toastStyle.textContent = `@keyframes slideInToast{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`;
+toastStyle.textContent = `@keyframes slideInToast{from{ opacity: 0; transform: translateY(10px) }to{ opacity: 1; transform: translateY(0) } } `;
 document.head.appendChild(toastStyle);
 
 // ===== SOLUTION MODAL =====
 function openSolution() {
     const p = codingProblems[currentProblem];
     if (!p?.solution) return;
-    document.getElementById('solBadge').textContent = `P${p.id}`;
-    document.getElementById('solTitle').textContent = `${p.title} — Solution`;
+    document.getElementById('solBadge').textContent = `P${ p.id } `;
+    document.getElementById('solTitle').textContent = `${ p.title } — Solution`;
     document.getElementById('solApproach').textContent = p.solution.approach;
     const cr = document.getElementById('solComplexityRow');
     cr.innerHTML = `
-    <div class="sol-badge sol-badge-time">⏱ Time: ${p.solution.timeComplexity}</div>
-    <div class="sol-badge sol-badge-space">📦 Space: ${p.solution.spaceComplexity}</div>
-  `;
+    < div class="sol-badge sol-badge-time" >⏱ Time: ${ p.solution.timeComplexity }</div >
+        <div class="sol-badge sol-badge-space">📦 Space: ${p.solution.spaceComplexity}</div>
+`;
     currentSolLang = document.getElementById('langSelect').value;
     updateSolCode(); updateSolTabs();
     document.getElementById('solOverlay').classList.add('open');
