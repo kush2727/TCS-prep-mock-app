@@ -1042,17 +1042,37 @@ async function loadAdminPanel() {
     } else {
         records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     }
+
+    // FILTER: Only show current day by default (Day 11)
+    const currentDayRecords = records.filter(r => r.day === 11);
+
     const tbody = document.getElementById('adminTableBody');
     const empty = document.getElementById('adminEmpty');
     const statsRow = document.getElementById('adminStatsRow');
     tbody.innerHTML = '';
 
-    // Stats
-    const totalStudents = records.length;
-    const avgApt = records.length
-        ? (records.reduce((s, r) => s + r.aptitudeScore, 0) / records.length).toFixed(1)
+    // Update Headers dynamically before checking length
+    const headerRow = document.querySelector('#adminTable thead tr');
+    const totalPossiblePoints = aptitudeQuestions.length + codingProblems.length;
+    if (headerRow && codingProblems.length >= 2) {
+        headerRow.innerHTML = `
+            <th>#</th>
+            <th>Day</th>
+            <th>Name</th>
+            <th>Submitted At</th>
+            <th>Aptitude</th>
+            <th>P1: ${codingProblems[0].title}</th>
+            <th>P2: ${codingProblems[1].title}</th>
+            <th>Total (/${totalPossiblePoints})</th>
+        `;
+    }
+
+    // Stats based on filtered records
+    const totalStudents = currentDayRecords.length;
+    const avgApt = currentDayRecords.length
+        ? (currentDayRecords.reduce((s, r) => s + r.aptitudeScore, 0) / currentDayRecords.length).toFixed(1)
         : '—';
-    const acceptedAny = records.filter(r => r.coding.some(c => c.verdict === 'Accepted')).length;
+    const acceptedAny = currentDayRecords.filter(r => r.coding.some(c => c.verdict === 'Accepted')).length;
 
     statsRow.innerHTML = `
     <div class="admin-stat-card"><div class="admin-stat-num">${totalStudents}</div><div class="admin-stat-label">Students</div></div>
@@ -1060,28 +1080,14 @@ async function loadAdminPanel() {
     <div class="admin-stat-card"><div class="admin-stat-num">${acceptedAny}</div><div class="admin-stat-label">Solved ≥1 Problem</div></div>
   `;
 
-    if (records.length === 0) {
+    if (currentDayRecords.length === 0) {
         empty.style.display = 'block';
+        empty.innerHTML = `<div style="padding: 2rem; color: #64748b;">No submissions for Day 11 yet.<br><small>Found ${records.length - currentDayRecords.length} records from previous days.</small></div>`;
         return;
     }
     empty.style.display = 'none';
 
-    // Update Headers dynamically based on current data.js titles (for the header row)
-    const headerRow = document.querySelector('#adminTable thead tr');
-    if (headerRow && codingProblems.length >= 2) {
-        headerRow.innerHTML = `
-            <th>#</th>
-            <th>Day</th>
-            <th>Student Name</th>
-            <th>Submitted At</th>
-            <th>Aptitude Score</th>
-            <th>P1: ${codingProblems[0].title}</th>
-            <th>P2: ${codingProblems[1].title}</th>
-            <th>Total Score (/${aptitudeQuestions.length + codingProblems.length})</th>
-        `;
-    }
-
-    records.forEach((r, i) => {
+    currentDayRecords.forEach((r, i) => {
         const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
         // recalculate for old records if totalScore is missing
         const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
