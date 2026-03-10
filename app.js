@@ -1061,7 +1061,13 @@ async function loadAdminPanel() {
     // 1. Group records by Day and Sort descending
     const grouped = {};
     records.forEach(r => {
-        const d = r.day || 11;
+        // INFER DAY: If day is missing, check date. Sept 2026 was Day 10.
+        let d = r.day;
+        if (!d) {
+            if (r.submittedAt && r.submittedAt.includes('9/3/2026')) d = 10;
+            else d = 11;
+        }
+
         if (!grouped[d]) grouped[d] = [];
         grouped[d].push(r);
     });
@@ -1070,6 +1076,9 @@ async function loadAdminPanel() {
 
     // 2. Render each group
     sortedDays.forEach(day => {
+        const isDay11 = parseInt(day) === 11;
+        const ptsLimit = isDay11 ? 37 : 27; // Day 11 has 35+2, others had 25+2
+
         // Group Header Row
         const separator = document.createElement('tr');
         separator.style.background = '#f8fafc';
@@ -1087,7 +1096,7 @@ async function loadAdminPanel() {
         dayRecords.forEach((r, i) => {
             const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
             const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
-            const grandTotal = r.grandTotal ?? (codingProblems.length + aptitudeQuestions.length);
+            const grandTotal = r.grandTotal ?? ptsLimit;
             const scoreColor = total >= (grandTotal * 0.8) ? '#10b981' : total >= (grandTotal * 0.5) ? '#f59e0b' : '#ef4444';
 
             const tr = document.createElement('tr');
@@ -1096,7 +1105,7 @@ async function loadAdminPanel() {
                 <td style="font-weight:700; color:var(--primary)">DAY ${day}</td>
                 <td class="admin-td-name">${escapeHtml(r.name)}</td>
                 <td class="admin-td-time">${r.submittedAt}</td>
-                <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || aptitudeQuestions.length}</td>
+                <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || (day == 11 ? 35 : 25)}</td>
                 <td>${verdictBadge(r.coding[0]?.verdict)}</td>
                 <td>${verdictBadge(r.coding[1]?.verdict)}</td>
                 <td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
