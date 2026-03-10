@@ -206,6 +206,7 @@ function saveScore() {
 
     const record = {
         name: studentName,
+        day: 11, // Current Mock Day
         submittedAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
         aptitudeScore: aptScore,
         aptitudeTotal: aptitudeQuestions.length,
@@ -1065,20 +1066,36 @@ async function loadAdminPanel() {
     }
     empty.style.display = 'none';
 
+    // Update Headers dynamically based on current data.js titles (for the header row)
+    const headerRow = document.querySelector('#adminTable thead tr');
+    if (headerRow && codingProblems.length >= 2) {
+        headerRow.innerHTML = `
+            <th>#</th>
+            <th>Day</th>
+            <th>Student Name</th>
+            <th>Submitted At</th>
+            <th>Aptitude Score</th>
+            <th>P1: ${codingProblems[0].title}</th>
+            <th>P2: ${codingProblems[1].title}</th>
+            <th>Total Score (/${aptitudeQuestions.length + codingProblems.length})</th>
+        `;
+    }
+
     records.forEach((r, i) => {
         const codingAccepted = r.coding.filter(c => c.verdict === 'Accepted').length;
-        // Use saved totalScore, or recalculate for old records
+        // recalculate for old records if totalScore is missing
         const total = r.totalScore ?? (r.aptitudeScore + codingAccepted);
-        const grandTotal = r.grandTotal ?? 27;
+        const grandTotal = r.grandTotal ?? (aptitudeQuestions.length + codingProblems.length);
 
-        const scoreColor = total >= 22 ? '#10b981' : total >= 14 ? '#f59e0b' : '#ef4444';
+        const scoreColor = total >= (grandTotal * 0.8) ? '#10b981' : total >= (grandTotal * 0.5) ? '#f59e0b' : '#ef4444';
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
       <td>${i + 1}</td>
+      <td style="font-weight:700; color:var(--primary)">DAY ${r.day || '11'}</td>
       <td class="admin-td-name">${escapeHtml(r.name)}</td>
       <td class="admin-td-time">${r.submittedAt}</td>
-      <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal}</td>
+      <td class="admin-td-score" style="color:var(--primary)">${r.aptitudeScore} / ${r.aptitudeTotal || aptitudeQuestions.length}</td>
       <td>${verdictBadge(r.coding[0]?.verdict)}</td>
       <td>${verdictBadge(r.coding[1]?.verdict)}</td>
       <td class="admin-td-pct" style="color:${scoreColor};font-size:1rem">${total} / ${grandTotal}</td>
